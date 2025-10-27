@@ -346,6 +346,7 @@ export default function BuildingManagerDashboard() {
             </TabsTrigger>
           </TabsList>
 
+          {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             <div className="grid lg:grid-cols-2 gap-8">
               {/* Recent Services */}
@@ -356,9 +357,11 @@ export default function BuildingManagerDashboard() {
                       <Wrench className="h-5 w-5 text-gold" />
                       <span>Recent Services</span>
                     </CardTitle>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href="#services">View All</Link>
-                    </Button>
+                    <Link href="/building-manager/services">
+                      <Button variant="outline" size="sm">
+                        View All
+                      </Button>
+                    </Link>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -399,9 +402,11 @@ export default function BuildingManagerDashboard() {
                       <AlertTriangle className="h-5 w-5 text-coral" />
                       <span>Recent Complaints</span>
                     </CardTitle>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href="#complaints">View All</Link>
-                    </Button>
+                    <Link href="/building-manager/complaints">
+                      <Button variant="outline" size="sm">
+                        View All
+                      </Button>
+                    </Link>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -451,29 +456,24 @@ export default function BuildingManagerDashboard() {
                     <Truck className="h-6 w-6" />
                     <span className="text-sm">Add Vendor</span>
                   </Button>
-                  <Button
-                    asChild
-                    className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-coral/10 to-coral/20 text-coral hover:from-coral/20 hover:to-coral/30 border-0"
-                  >
-                    <Link href="#emergency">
+                  <Link href="/building-manager/emergency">
+                    <Button className="w-full h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-coral/10 to-coral/20 text-coral hover:from-coral/20 hover:to-coral/30 border-0">
                       <Phone className="h-6 w-6" />
                       <span className="text-sm">Emergency</span>
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-stone/10 to-stone/20 text-stone hover:from-stone/20 hover:to-stone/30 border-0"
-                  >
-                    <Link href="#reports">
+                    </Button>
+                  </Link>
+                  <Link href="/building-manager/reports">
+                    <Button className="w-full h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-stone/10 to-stone/20 text-stone hover:from-stone/20 hover:to-stone/30 border-0">
                       <ClipboardList className="h-6 w-6" />
                       <span className="text-sm">Reports</span>
-                    </Link>
-                  </Button>
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
+          {/* Services Tab */}
           <TabsContent value="services" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-teal font-serif">Service Management</h2>
@@ -552,14 +552,14 @@ export default function BuildingManagerDashboard() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="border-gold text-gold hover:bg-gold hover:text-white"
+                            className="border-gold text-gold hover:bg-gold hover:text-white bg-transparent"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
                           <Button
                             size="sm"
                             variant="outline"
-                            className="border-teal text-teal hover:bg-teal hover:text-white"
+                            className="border-teal text-teal hover:bg-teal hover:text-white bg-transparent"
                           >
                             <CheckCircle className="h-4 w-4" />
                           </Button>
@@ -572,6 +572,7 @@ export default function BuildingManagerDashboard() {
             </Card>
           </TabsContent>
 
+          {/* Complaints Tab */}
           <TabsContent value="complaints" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-teal font-serif">Complaint Management</h2>
@@ -624,7 +625,7 @@ export default function BuildingManagerDashboard() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="border-gold text-gold hover:bg-gold hover:text-white"
+                            className="border-gold text-gold hover:bg-gold hover:text-white bg-transparent"
                           >
                             Escalate to Management
                           </Button>
@@ -639,7 +640,7 @@ export default function BuildingManagerDashboard() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-stone text-stone hover:bg-stone hover:text-white"
+                        className="border-stone text-stone hover:bg-stone hover:text-white bg-transparent"
                       >
                         View Details
                       </Button>
@@ -650,6 +651,7 @@ export default function BuildingManagerDashboard() {
             </div>
           </TabsContent>
 
+          {/* Tenants Tab */}
           <TabsContent value="tenants" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-teal font-serif">Tenant Management</h2>
@@ -670,7 +672,7 @@ export default function BuildingManagerDashboard() {
                       <div className="flex items-center space-x-4">
                         <Avatar className="w-12 h-12 ring-2 ring-gold/20">
                           <AvatarImage
-                            src={`/placeholder.svg?height=48&width=48&text=${tenant.name
+                            src={`/placeholder-icon.png?height=48&width=48&text=${tenant.name
                               .split(" ")
                               .map((n) => n[0])
                               .join("")}`}
@@ -716,7 +718,7 @@ export default function BuildingManagerDashboard() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-gold text-gold hover:bg-gold hover:text-white"
+                        className="border-gold text-gold hover:bg-gold hover:text-white bg-transparent"
                       >
                         <Edit className="h-4 w-4 mr-2" />
                         Edit Details
@@ -724,7 +726,7 @@ export default function BuildingManagerDashboard() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-teal text-teal hover:bg-teal hover:text-white"
+                        className="border-teal text-teal hover:bg-teal hover:text-white bg-transparent"
                       >
                         <Mail className="h-4 w-4 mr-2" />
                         Send Message
@@ -732,7 +734,7 @@ export default function BuildingManagerDashboard() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-stone text-stone hover:bg-stone hover:text-white"
+                        className="border-stone text-stone hover:bg-stone hover:text-white bg-transparent"
                       >
                         View History
                       </Button>
@@ -743,6 +745,7 @@ export default function BuildingManagerDashboard() {
             </div>
           </TabsContent>
 
+          {/* Vendors Tab */}
           <TabsContent value="vendors" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-teal font-serif">Vendor Management</h2>
@@ -796,7 +799,7 @@ export default function BuildingManagerDashboard() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="flex-1 border-gold text-gold hover:bg-gold hover:text-white"
+                        className="flex-1 border-gold text-gold hover:bg-gold hover:text-white bg-transparent"
                       >
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
@@ -804,7 +807,7 @@ export default function BuildingManagerDashboard() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="flex-1 border-teal text-teal hover:bg-teal hover:text-white"
+                        className="flex-1 border-teal text-teal hover:bg-teal hover:text-white bg-transparent"
                       >
                         Assign Job
                       </Button>
@@ -815,6 +818,7 @@ export default function BuildingManagerDashboard() {
             </div>
           </TabsContent>
 
+          {/* Emergency Tab */}
           <TabsContent value="emergency" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-teal font-serif">Emergency Requests</h2>
@@ -850,14 +854,14 @@ export default function BuildingManagerDashboard() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-red-500 text-red-600 hover:bg-red-500 hover:text-white"
+                      className="border-red-500 text-red-600 hover:bg-red-500 hover:text-white bg-transparent"
                     >
                       Assign Emergency Team
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-red-500 text-red-600 hover:bg-red-500 hover:text-white"
+                      className="border-red-500 text-red-600 hover:bg-red-500 hover:text-white bg-transparent"
                     >
                       Mark Resolved
                     </Button>
@@ -893,14 +897,14 @@ export default function BuildingManagerDashboard() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white"
+                      className="border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white bg-transparent"
                     >
                       Contact Elevator Company
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white"
+                      className="border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white bg-transparent"
                     >
                       Update Status
                     </Button>
