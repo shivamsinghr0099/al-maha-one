@@ -64,7 +64,7 @@
     text-wrap: balance;
   }
 
-  /* Custom scrollbar */
+  /* Enhanced scrollbar utilities for horizontal tabs */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -72,6 +72,36 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Smooth scrolling for horizontal tabs */
+  .scroll-smooth-x {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Custom scrollbar for better UX */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(46, 125, 143, 0.3) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(46, 125, 143, 0.3);
+    border-radius: 2px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(46, 125, 143, 0.5);
   }
 
   /* Safe area for mobile devices */
