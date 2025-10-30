@@ -2,9 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Playfair_Display } from "next/font/google"
 import "./globals.css"
-import { ErrorBoundary } from "@/components/error-boundary"
-import { PerformanceMonitor } from "@/components/performance-monitor"
-import { ServiceWorkerRegistration } from "@/components/service-worker"
+import { Providers } from "@/components/provider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -106,11 +104,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <ErrorBoundary>
-          <PerformanceMonitor />
-          <ServiceWorkerRegistration />
-          {children}
-        </ErrorBoundary>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
