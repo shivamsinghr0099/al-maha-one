@@ -18,6 +18,7 @@ import {
   Bell,
   FileText,
   Database,
+  Lock,
   Activity,
   Eye,
   DollarSign,
@@ -36,11 +37,12 @@ import {
   BarChart3,
   Truck,
   HelpCircle,
+  CableCarIcon as Elevator,
   UserPlus,
 } from "lucide-react"
 import { MahaLogo } from "@/components/maha-logo"
 
-// System stats
+// All the data from previous implementation plus new comprehensive data
 const systemStats = [
   {
     title: "Total Properties",
@@ -80,7 +82,7 @@ const systemStats = [
   },
 ]
 
-// Comprehensive tenant services
+// Comprehensive tenant services that Super Admin can access
 const tenantServices = [
   {
     id: "move-in-out",
@@ -173,6 +175,16 @@ const tenantServices = [
     category: "security",
   },
   {
+    id: "lift-booking",
+    title: "Lift Booking System",
+    description: "Manage elevator reservations",
+    icon: Elevator,
+    color: "from-secondary to-secondary-600",
+    bgColor: "bg-secondary/10",
+    route: "/super-admin/tenant-services/lift-booking",
+    category: "logistics",
+  },
+  {
     id: "community",
     title: "Community Forum",
     description: "Moderate discussions and announcements",
@@ -194,7 +206,7 @@ const tenantServices = [
   },
 ]
 
-// Building Manager tools
+// Building Manager capabilities for Super Admin
 const buildingManagerTools = [
   {
     id: "tenant-management",
@@ -230,7 +242,7 @@ const buildingManagerTools = [
   },
 ]
 
-// Landlord tools
+// Landlord capabilities for Super Admin
 const landlordTools = [
   {
     id: "portfolio-management",
@@ -266,7 +278,7 @@ const landlordTools = [
   },
 ]
 
-// Financial overview
+// Financial overview data
 const financialOverview = [
   {
     title: "Total Monthly Revenue",
@@ -302,7 +314,7 @@ const financialOverview = [
   },
 ]
 
-// Emergency contacts
+// Emergency contacts and tools
 const emergencyTools = [
   {
     title: "Fire Department",
@@ -627,7 +639,7 @@ export default function SuperAdminDashboard() {
             </Card>
           </TabsContent>
 
-          {/* Tenant Services Tab */}
+          {/* Tenant Services Tab - All tenant features */}
           <TabsContent value="tenant-services" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-teal font-serif">Complete Tenant Services</h2>
@@ -674,90 +686,343 @@ export default function SuperAdminDashboard() {
             </div>
           </TabsContent>
 
-          {/* Other tabs with placeholder content */}
+          {/* Building Operations Tab - All building manager features */}
           <TabsContent value="building-ops" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-teal font-serif">Building Operations Management</h2>
+              <Badge className="bg-teal/10 text-teal">All Building Manager Features</Badge>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {buildingManagerTools.map((tool) => (
+                <Card
+                  key={tool.id}
+                  className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm cursor-pointer"
+                >
+                  <CardContent className="p-6 text-center">
+                    <div
+                      className={`w-16 h-16 bg-gradient-to-br ${tool.color} rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg`}
+                    >
+                      <tool.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-teal text-lg mb-2">{tool.title}</h3>
+                    <p className="text-sm text-teal/70 mb-3">{tool.description}</p>
+                    <Badge className="bg-teal/10 text-teal">{tool.count}</Badge>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Building Manager Quick Actions */}
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <Settings className="h-16 w-16 text-teal/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-teal mb-2">Building Operations</h3>
-                <p className="text-teal/60">Complete building management features coming soon</p>
+              <CardHeader>
+                <CardTitle className="text-teal font-serif">Building Management Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-teal/10 to-teal/20 text-teal hover:from-teal/20 hover:to-teal/30 border-0">
+                    <UserPlus className="h-6 w-6" />
+                    <span className="text-sm">Add Tenant</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-orange/10 to-orange/20 text-orange hover:from-orange/20 hover:to-orange/30 border-0">
+                    <Wrench className="h-6 w-6" />
+                    <span className="text-sm">Schedule Service</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-gold/10 to-gold/20 text-gold hover:from-gold/20 hover:to-gold/30 border-0">
+                    <Truck className="h-6 w-6" />
+                    <span className="text-sm">Add Vendor</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-red/10 to-red/20 text-red hover:from-red/20 hover:to-red/30 border-0">
+                    <Phone className="h-6 w-6" />
+                    <span className="text-sm">Emergency</span>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
+          {/* Landlord Tools Tab - All landlord features */}
           <TabsContent value="landlord-tools" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-teal font-serif">Landlord Management Tools</h2>
+              <Badge className="bg-blue-100 text-blue-800">All Landlord Features</Badge>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {landlordTools.map((tool) => (
+                <Card
+                  key={tool.id}
+                  className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm cursor-pointer"
+                >
+                  <CardContent className="p-6 text-center">
+                    <div
+                      className={`w-16 h-16 bg-gradient-to-br ${tool.color} rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg`}
+                    >
+                      <tool.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-teal text-lg mb-2">{tool.title}</h3>
+                    <p className="text-sm text-teal/70 mb-3">{tool.description}</p>
+                    <Badge className="bg-blue-100 text-blue-800">{tool.count}</Badge>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Landlord Quick Actions */}
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <Building className="h-16 w-16 text-teal/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-teal mb-2">Landlord Tools</h3>
-                <p className="text-teal/60">Property management tools coming soon</p>
+              <CardHeader>
+                <CardTitle className="text-teal font-serif">Landlord Management Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-blue/10 to-blue/20 text-blue hover:from-blue/20 hover:to-blue/30 border-0">
+                    <Building className="h-6 w-6" />
+                    <span className="text-sm">Add Property</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-green/10 to-green/20 text-green hover:from-green/20 hover:to-green/30 border-0">
+                    <DollarSign className="h-6 w-6" />
+                    <span className="text-sm">Collect Rent</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-purple/10 to-purple/20 text-purple hover:from-purple/20 hover:to-purple/30 border-0">
+                    <UserCheck className="h-6 w-6" />
+                    <span className="text-sm">Screen Tenant</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-indigo/10 to-indigo/20 text-indigo hover:from-indigo/20 hover:to-indigo/30 border-0">
+                    <BarChart3 className="h-6 w-6" />
+                    <span className="text-sm">View Analytics</span>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
+          {/* Financial Management Tab */}
           <TabsContent value="financial" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-teal font-serif">Complete Financial Management</h2>
+              <div className="flex space-x-2">
+                <Badge className="bg-green-100 text-green-800">Revenue: AED 2.1M</Badge>
+                <Badge className="bg-red-100 text-red-800">Outstanding: AED 145K</Badge>
+              </div>
+            </div>
+
+            {/* Financial Overview Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {financialOverview.map((item, index) => (
+                <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-teal/70">{item.title}</p>
+                        <p className="text-xl font-bold text-teal">{item.value}</p>
+                        <p className={`text-xs ${item.trend === "up" ? "text-emerald-600" : "text-red-600"}`}>
+                          {item.change}
+                        </p>
+                      </div>
+                      <div
+                        className={`p-3 rounded-xl ${item.color === "text-green-600" ? "bg-green-50" : item.color === "text-red-600" ? "bg-red-50" : item.color === "text-blue-600" ? "bg-blue-50" : "bg-purple-50"}`}
+                      >
+                        <item.icon className={`h-6 w-6 ${item.color}`} />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Financial Actions */}
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <DollarSign className="h-16 w-16 text-teal/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-teal mb-2">Financial Management</h3>
-                <p className="text-teal/60">Complete financial overview coming soon</p>
+              <CardHeader>
+                <CardTitle className="text-teal font-serif">Financial Operations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-green/10 to-green/20 text-green hover:from-green/20 hover:to-green/30 border-0">
+                    <DollarSign className="h-6 w-6" />
+                    <span className="text-sm">Process Payments</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-red/10 to-red/20 text-red hover:from-red/20 hover:to-red/30 border-0">
+                    <AlertTriangle className="h-6 w-6" />
+                    <span className="text-sm">Overdue Notices</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-blue/10 to-blue/20 text-blue hover:from-blue/20 hover:to-blue/30 border-0">
+                    <BarChart3 className="h-6 w-6" />
+                    <span className="text-sm">Financial Reports</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-purple/10 to-purple/20 text-purple hover:from-purple/20 hover:to-purple/30 border-0">
+                    <FileText className="h-6 w-6" />
+                    <span className="text-sm">Generate Invoice</span>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="approvals" className="space-y-6">
+          {/* Emergency Management Tab */}
+          <TabsContent value="emergency" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-teal font-serif">Emergency Management Center</h2>
+              <Badge className="bg-red-100 text-red-800">2 Active Emergencies</Badge>
+            </div>
+
+            {/* Emergency Contacts */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {emergencyTools.map((contact, index) => (
+                <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                  <CardContent className="p-4 text-center">
+                    <div
+                      className={`w-12 h-12 ${contact.color} rounded-xl mx-auto mb-3 flex items-center justify-center`}
+                    >
+                      <contact.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <h4 className="font-semibold text-teal text-sm">{contact.title}</h4>
+                    <p className="text-lg font-bold text-teal">{contact.contact}</p>
+                    <Button size="sm" className="mt-2 w-full">
+                      <Phone className="h-4 w-4 mr-2" />
+                      Call Now
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Emergency Actions */}
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <CheckCircle className="h-16 w-16 text-teal/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-teal mb-2">Approval Management</h3>
-                <p className="text-teal/60">Approval system coming soon</p>
+              <CardHeader>
+                <CardTitle className="text-teal font-serif">Emergency Response Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-red/10 to-red/20 text-red hover:from-red/20 hover:to-red/30 border-0">
+                    <AlertTriangle className="h-6 w-6" />
+                    <span className="text-sm">Declare Emergency</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-orange/10 to-orange/20 text-orange hover:from-orange/20 hover:to-orange/30 border-0">
+                    <Bell className="h-6 w-6" />
+                    <span className="text-sm">Send Alert</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-blue/10 to-blue/20 text-blue hover:from-blue/20 hover:to-blue/30 border-0">
+                    <Phone className="h-6 w-6" />
+                    <span className="text-sm">Contact Security</span>
+                  </Button>
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-green/10 to-green/20 text-green hover:from-green/20 hover:to-green/30 border-0">
+                    <CheckCircle className="h-6 w-6" />
+                    <span className="text-sm">All Clear</span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Keep existing approvals, system, analytics, and reports tabs */}
+          <TabsContent value="approvals" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-teal font-serif">Approval Management</h2>
+              <Badge className="bg-coral/10 text-coral">18 Pending Approvals</Badge>
+            </div>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <p className="text-teal/70 text-center py-8">
+                  Comprehensive approval system for all tenant requests, building modifications, and system changes.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <BarChart3 className="h-16 w-16 text-teal/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-teal mb-2">Analytics Dashboard</h3>
-                <p className="text-teal/60">Comprehensive analytics coming soon</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-teal font-serif">Analytics & Insights</h2>
+              <Badge className="bg-blue-100 text-blue-800">Real-time Data</Badge>
+            </div>
 
-          <TabsContent value="emergency" className="space-y-6">
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <AlertTriangle className="h-16 w-16 text-coral/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-teal mb-2">Emergency Management</h3>
-                <p className="text-teal/60">Emergency response system coming soon</p>
+              <CardContent className="p-6">
+                <p className="text-teal/70 text-center py-8">
+                  Comprehensive analytics dashboard with property performance, tenant satisfaction, and financial
+                  insights.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="system" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <Database className="h-16 w-16 text-teal/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-teal mb-2">System Administration</h3>
-                <p className="text-teal/60">System management tools coming soon</p>
-              </CardContent>
-            </Card>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-teal font-serif">System Administration</h2>
+              <Badge className="bg-emerald-100 text-emerald-800">All Systems Operational</Badge>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2 text-teal font-serif">
+                    <Database className="h-5 w-5 text-blue-600" />
+                    <span>Database Management</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-teal/70">Database Size</span>
+                    <span className="font-bold text-teal">2.4 GB</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-teal/70">Last Backup</span>
+                    <span className="font-bold text-teal">2024-01-20 02:00</span>
+                  </div>
+                  <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                    <Database className="h-4 w-4 mr-2" />
+                    Create Backup
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2 text-teal font-serif">
+                    <Lock className="h-5 w-5 text-red-600" />
+                    <span>Security Settings</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-teal/70">SSL Certificate</span>
+                    <Badge className="bg-green-100 text-green-800">Valid</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-teal/70">Firewall Status</span>
+                    <Badge className="bg-green-100 text-green-800">Active</Badge>
+                  </div>
+                  <Button className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white">
+                    <Lock className="h-4 w-4 mr-2" />
+                    Security Scan
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="reports" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold text-teal font-serif">Reports & Documentation</h2>
+              <Button className="bg-gradient-to-r from-coral to-coral-dark text-white">
+                <FileText className="h-4 w-4 mr-2" />
+                Generate Report
+              </Button>
+            </div>
+
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <FileText className="h-16 w-16 text-teal/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-teal mb-2">Reports & Documentation</h3>
-                <p className="text-teal/60">Report generation system coming soon</p>
+              <CardContent className="p-6">
+                <p className="text-teal/70 text-center py-8">
+                  Comprehensive reporting system for all aspects of property management, financial performance, and
+                  system usage.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
 
-      {/* Modals */}
+      {/* Keep existing modals */}
       {showAddManagerModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <Card className="w-full max-w-md bg-white">
