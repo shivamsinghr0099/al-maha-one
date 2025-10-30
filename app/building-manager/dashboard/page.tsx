@@ -1,349 +1,114 @@
 "use client"
 
 import { useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
 import {
   Building2,
   Users,
-  UserCheck,
+  AlertCircle,
+  TrendingUp,
   Calendar,
+  UserCheck,
   FileText,
   Settings,
-  Bell,
   Plus,
   Edit,
   Trash2,
-  TrendingUp,
-  Clock,
-  Lock,
+  Eye,
+  Search,
+  Upload,
+  Bell,
   Mail,
 } from "lucide-react"
-import { MahaLogo } from "@/components/maha-logo"
 
 export default function BuildingManagerDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filterStatus, setFilterStatus] = useState("all")
 
   const [editingProperty, setEditingProperty] = useState<any>(null)
-  const [editingTenant, setEditingTenant] = useState<any>(null)
-  const [editingLandlord, setEditingLandlord] = useState<any>(null)
-  const [editingVisit, setEditingVisit] = useState<any>(null)
   const [editingVisitPurpose, setEditingVisitPurpose] = useState<any>(null)
   const [editingAmenity, setEditingAmenity] = useState<any>(null)
-  const [editingAmenityBooking, setEditingAmenityBooking] = useState<any>(null)
   const [editingHomeService, setEditingHomeService] = useState<any>(null)
   const [editingServiceProduct, setEditingServiceProduct] = useState<any>(null)
-  const [editingServiceBooking, setEditingServiceBooking] = useState<any>(null)
   const [editingServiceProvider, setEditingServiceProvider] = useState<any>(null)
-  const [editingReport, setEditingReport] = useState<any>(null)
   const [editingReportPriority, setEditingReportPriority] = useState<any>(null)
   const [editingReportCategory, setEditingReportCategory] = useState<any>(null)
   const [editingCommunityPost, setEditingCommunityPost] = useState<any>(null)
-  const [showPasswordDialog, setShowPasswordDialog] = useState(false)
-  const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false)
 
-  // Mock data
-  const properties = [
+  // Mock data - Replace with actual API calls
+  const stats = [
     {
-      id: 1,
-      nameEn: "Tower A",
-      nameAr: "برج أ",
-      location: "Dubai Marina",
-      area: "1200 sqft",
-      bedrooms: 2,
-      floor: 15,
-      type: "Apartment",
+      title: "Total Properties",
+      value: "24",
+      change: "+2 this month",
+      icon: Building2,
+      color: "text-teal",
     },
     {
-      id: 2,
-      nameEn: "Villa B",
-      nameAr: "فيلا ب",
-      location: "Palm Jumeirah",
-      area: "3500 sqft",
-      bedrooms: 4,
-      floor: 1,
-      type: "Villa",
+      title: "Active Tenants",
+      value: "156",
+      change: "+12 this month",
+      icon: Users,
+      color: "text-gold",
+    },
+    {
+      title: "Pending Requests",
+      value: "8",
+      change: "2 urgent",
+      icon: AlertCircle,
+      color: "text-coral",
+    },
+    {
+      title: "Revenue",
+      value: "AED 245K",
+      change: "+15% vs last month",
+      icon: TrendingUp,
+      color: "text-forest",
     },
   ]
-
-  const tenants = [
-    {
-      id: 1,
-      name: "Ahmed Al Mansouri",
-      email: "ahmed@email.com",
-      phone: "+971 50 123 4567",
-      unit: "A-101",
-      property: "Tower A",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      email: "sarah@email.com",
-      phone: "+971 55 987 6543",
-      unit: "B-205",
-      property: "Villa B",
-      status: "Active",
-    },
-  ]
-
-  const landlords = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@example.com",
-      phone: "+971 50 987 0543",
-      properties: 3,
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      phone: "+971 55 123 4567",
-      properties: 2,
-      status: "Active",
-    },
-  ]
-
-  const visits = [
-    {
-      id: 1,
-      visitorName: "Ali Hassan",
-      purpose: "Delivery",
-      tenant: "Ahmed Al Mansouri",
-      unit: "A-101",
-      date: "2024-01-20",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      visitorName: "Sara Ahmed",
-      purpose: "Guest",
-      tenant: "Sarah Johnson",
-      unit: "B-205",
-      date: "2024-01-21",
-      status: "Approved",
-    },
-  ]
-
-  const visitPurposes = [
-    { id: 1, nameEn: "Delivery", nameAr: "توصيل", autoApprove: true, status: "Active" },
-    { id: 2, nameEn: "Guest", nameAr: "ضيف", autoApprove: false, status: "Active" },
-  ]
-
-  const amenities = [
-    {
-      id: 1,
-      property: "Tower A",
-      name: "Swimming Pool",
-      description: "Olympic size pool",
-      capacity: 50,
-      price: "Free",
-      status: "Active",
-    },
-    {
-      id: 2,
-      property: "Tower A",
-      name: "Gym",
-      description: "Fully equipped fitness center",
-      capacity: 30,
-      price: "Free",
-      status: "Active",
-    },
-  ]
-
-  const amenityBookings = [
-    {
-      id: 1,
-      amenity: "Swimming Pool",
-      tenant: "Ahmed Al Mansouri",
-      date: "2024-01-25",
-      time: "10:00 AM",
-      status: "Confirmed",
-    },
-    { id: 2, amenity: "Gym", tenant: "Sarah Johnson", date: "2024-01-26", time: "6:00 PM", status: "Pending" },
-  ]
-
-  const homeServices = [
-    {
-      id: 1,
-      property: "Tower A",
-      title: "AC Maintenance",
-      name: "Annual AC Service",
-      basePrice: "AED 350",
-      status: "Active",
-    },
-    {
-      id: 2,
-      property: "Villa B",
-      title: "Plumbing",
-      name: "Emergency Plumbing",
-      basePrice: "AED 200",
-      status: "Active",
-    },
-  ]
-
-  const serviceProducts = [
-    {
-      id: 1,
-      service: "AC Maintenance",
-      nameEn: "Filter Replacement",
-      nameAr: "استبدال الفلتر",
-      price: "AED 50",
-      status: "Active",
-    },
-    { id: 2, service: "Plumbing", nameEn: "Pipe Repair", nameAr: "إصلاح الأنابيب", price: "AED 100", status: "Active" },
-  ]
-
-  const serviceBookings = [
-    {
-      id: 1,
-      service: "AC Maintenance",
-      tenant: "Ahmed Al Mansouri",
-      date: "2024-01-28",
-      time: "2:00 PM",
-      status: "Scheduled",
-    },
-    { id: 2, service: "Plumbing", tenant: "Sarah Johnson", date: "2024-01-29", time: "10:00 AM", status: "Completed" },
-  ]
-
-  const serviceProviders = [
-    {
-      id: 1,
-      serviceType: "AC Maintenance",
-      nameEn: "Cool Tech",
-      nameAr: "كول تك",
-      email: "info@cooltech.ae",
-      phone: "+971 4 123 4567",
-      status: "Active",
-    },
-    {
-      id: 2,
-      serviceType: "Plumbing",
-      nameEn: "Fix It Pro",
-      nameAr: "فيكس إت برو",
-      email: "service@fixitpro.ae",
-      phone: "+971 4 987 6543",
-      status: "Active",
-    },
-  ]
-
-  const reports = [
-    {
-      id: 1,
-      title: "Broken Elevator",
-      category: "Maintenance",
-      priority: "High",
-      tenant: "Ahmed Al Mansouri",
-      status: "Open",
-      date: "2024-01-20",
-    },
-    {
-      id: 2,
-      title: "Noise Complaint",
-      category: "Complaint",
-      priority: "Medium",
-      tenant: "Sarah Johnson",
-      status: "In Progress",
-      date: "2024-01-21",
-    },
-  ]
-
-  const reportPriorities = [
-    { id: 1, name: "High Priority", status: "Active" },
-    { id: 2, name: "Medium Priority", status: "Active" },
-    { id: 3, name: "Low Priority", status: "Active" },
-  ]
-
-  const reportCategories = [
-    { id: 1, name: "Maintenance", status: "Active" },
-    { id: 2, name: "Complaint", status: "Active" },
-    { id: 3, name: "Emergency", status: "Active" },
-  ]
-
-  const communityPosts = [
-    {
-      id: 1,
-      title: "Community BBQ Event",
-      type: "Event",
-      description: "Join us for a community BBQ this Saturday!",
-      author: "Building Manager",
-      date: "2024-01-20",
-      status: "Published",
-    },
-    {
-      id: 2,
-      title: "Pool Maintenance Notice",
-      type: "Announcement",
-      description: "Pool will be closed for maintenance on Jan 25",
-      author: "Building Manager",
-      date: "2024-01-21",
-      status: "Published",
-    },
-  ]
-
-  const getStatusColor = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case "active":
-      case "approved":
-      case "confirmed":
-      case "completed":
-      case "published":
-        return "bg-green-100 text-green-800"
-      case "pending":
-      case "scheduled":
-        return "bg-yellow-100 text-yellow-800"
-      case "in progress":
-      case "open":
-        return "bg-blue-100 text-blue-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pearl via-pearl-light to-stone-light">
+    <div className="min-h-screen bg-gradient-to-br from-stone via-white to-teal/10">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-stone/20 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <MahaLogo size="md" variant="primary" showText={true} />
-              <div className="h-6 w-px bg-stone/30"></div>
-              <div>
-                <h1 className="text-xl font-bold text-teal font-serif">Building Manager Portal</h1>
-                <p className="text-xs text-teal/60">Manage properties, tenants, and services</p>
-              </div>
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-forest">Building Manager Portal</h1>
+              <p className="text-sm text-gray-600">Manage properties, tenants, and services</p>
             </div>
-
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="relative">
-                <Bell className="h-5 w-5 text-teal" />
-                <span className="absolute -top-1 -right-1 h-4 w-4 bg-coral rounded-full text-xs text-white flex items-center justify-center">
-                  3
-                </span>
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size="icon">
+                <Bell className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => setActiveTab("settings")}>
-                <Settings className="h-5 w-5 text-teal" />
+              <Button variant="outline" size="icon">
+                <Settings className="h-5 w-5" />
               </Button>
-              <div className="flex items-center space-x-3">
-                <Avatar className="ring-2 ring-gold/20">
-                  <AvatarFallback className="bg-gradient-to-br from-teal to-teal-dark text-white">BM</AvatarFallback>
-                </Avatar>
-                <div className="hidden md:block text-right">
-                  <p className="text-sm font-medium text-teal">Building Manager</p>
-                  <p className="text-xs text-teal/60">manager@mahaone.com</p>
+              <div className="flex items-center gap-2">
+                <div className="h-10 w-10 rounded-full bg-teal flex items-center justify-center text-white font-semibold">
+                  BM
+                </div>
+                <div className="text-sm">
+                  <p className="font-semibold">Building Manager</p>
+                  <p className="text-gray-600">manager@mahaone.com</p>
                 </div>
               </div>
             </div>
@@ -351,146 +116,76 @@ export default function BuildingManagerDashboard() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container mx-auto px-4 py-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-teal/70">Total Properties</p>
-                  <p className="text-2xl font-bold text-teal">24</p>
-                  <p className="text-xs text-emerald-600">+2 this month</p>
-                </div>
-                <div className="p-3 rounded-xl bg-teal/10">
-                  <Building2 className="h-6 w-6 text-teal" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-teal/70">Active Tenants</p>
-                  <p className="text-2xl font-bold text-teal">156</p>
-                  <p className="text-xs text-emerald-600">+12 this month</p>
-                </div>
-                <div className="p-3 rounded-xl bg-gold/10">
-                  <Users className="h-6 w-6 text-gold" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-teal/70">Pending Requests</p>
-                  <p className="text-2xl font-bold text-teal">8</p>
-                  <p className="text-xs text-coral">2 urgent</p>
-                </div>
-                <div className="p-3 rounded-xl bg-coral/10">
-                  <Clock className="h-6 w-6 text-coral" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-teal/70">Revenue</p>
-                  <p className="text-2xl font-bold text-teal">AED 245K</p>
-                  <p className="text-xs text-emerald-600">+15% vs last month</p>
-                </div>
-                <div className="p-3 rounded-xl bg-stone/10">
-                  <TrendingUp className="h-6 w-6 text-stone" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {stats.map((stat, index) => (
+            <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">{stat.title}</CardTitle>
+                <stat.icon className={`h-5 w-5 ${stat.color}`} />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-forest">{stat.value}</div>
+                <p className="text-xs text-gray-600 mt-1">{stat.change}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
+        {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm">
-            <TabsList className="inline-flex w-full overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-stone/30 scrollbar-track-transparent">
-              <TabsTrigger value="overview" className="data-[state=active]:bg-teal data-[state=active]:text-white">
+          <div className="relative">
+            <TabsList className="inline-flex w-full overflow-x-auto bg-white/80 backdrop-blur-sm p-1 rounded-lg shadow-sm scrollbar-hide">
+              <TabsTrigger value="overview" className="whitespace-nowrap">
                 Overview
               </TabsTrigger>
-              <TabsTrigger value="properties" className="data-[state=active]:bg-teal data-[state=active]:text-white">
+              <TabsTrigger value="properties" className="whitespace-nowrap">
                 Properties
               </TabsTrigger>
-              <TabsTrigger value="tenants" className="data-[state=active]:bg-teal data-[state=active]:text-white">
+              <TabsTrigger value="tenants" className="whitespace-nowrap">
                 Tenants
               </TabsTrigger>
-              <TabsTrigger value="landlords" className="data-[state=active]:bg-teal data-[state=active]:text-white">
+              <TabsTrigger value="landlords" className="whitespace-nowrap">
                 Landlords
               </TabsTrigger>
-              <TabsTrigger value="visits" className="data-[state=active]:bg-teal data-[state=active]:text-white">
+              <TabsTrigger value="visits" className="whitespace-nowrap">
                 Visits
               </TabsTrigger>
-              <TabsTrigger
-                value="visit-purposes"
-                className="data-[state=active]:bg-teal data-[state=active]:text-white"
-              >
+              <TabsTrigger value="visit-purposes" className="whitespace-nowrap">
                 Visit Purposes
               </TabsTrigger>
-              <TabsTrigger value="amenities" className="data-[state=active]:bg-teal data-[state=active]:text-white">
+              <TabsTrigger value="amenities" className="whitespace-nowrap">
                 Amenities
               </TabsTrigger>
-              <TabsTrigger
-                value="amenity-bookings"
-                className="data-[state=active]:bg-teal data-[state=active]:text-white"
-              >
+              <TabsTrigger value="amenity-bookings" className="whitespace-nowrap">
                 Amenity Bookings
               </TabsTrigger>
-              <TabsTrigger value="home-services" className="data-[state=active]:bg-teal data-[state=active]:text-white">
+              <TabsTrigger value="home-services" className="whitespace-nowrap">
                 Home Services
               </TabsTrigger>
-              <TabsTrigger
-                value="service-products"
-                className="data-[state=active]:bg-teal data-[state=active]:text-white"
-              >
+              <TabsTrigger value="service-products" className="whitespace-nowrap">
                 Service Products
               </TabsTrigger>
-              <TabsTrigger
-                value="service-bookings"
-                className="data-[state=active]:bg-teal data-[state=active]:text-white"
-              >
+              <TabsTrigger value="service-bookings" className="whitespace-nowrap">
                 Service Bookings
               </TabsTrigger>
-              <TabsTrigger
-                value="service-providers"
-                className="data-[state=active]:bg-teal data-[state=active]:text-white"
-              >
+              <TabsTrigger value="service-providers" className="whitespace-nowrap">
                 Service Providers
               </TabsTrigger>
-              <TabsTrigger value="reports" className="data-[state=active]:bg-teal data-[state=active]:text-white">
+              <TabsTrigger value="reports" className="whitespace-nowrap">
                 Reports
               </TabsTrigger>
-              <TabsTrigger
-                value="report-priorities"
-                className="data-[state=active]:bg-teal data-[state=active]:text-white"
-              >
+              <TabsTrigger value="report-priorities" className="whitespace-nowrap">
                 Report Priorities
               </TabsTrigger>
-              <TabsTrigger
-                value="report-categories"
-                className="data-[state=active]:bg-teal data-[state=active]:text-white"
-              >
+              <TabsTrigger value="report-categories" className="whitespace-nowrap">
                 Report Categories
               </TabsTrigger>
-              <TabsTrigger
-                value="community-wall"
-                className="data-[state=active]:bg-teal data-[state=active]:text-white"
-              >
+              <TabsTrigger value="community" className="whitespace-nowrap">
                 Community Wall
               </TabsTrigger>
-              <TabsTrigger value="settings" className="data-[state=active]:bg-teal data-[state=active]:text-white">
+              <TabsTrigger value="settings" className="whitespace-nowrap">
                 Settings
               </TabsTrigger>
             </TabsList>
@@ -498,76 +193,54 @@ export default function BuildingManagerDashboard() {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid lg:grid-cols-2 gap-6">
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-teal font-serif">Recent Activities</CardTitle>
+                  <CardTitle>Recent Activities</CardTitle>
                   <CardDescription>Latest updates across all properties</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-start space-x-3 p-3 rounded-lg hover:bg-stone/5">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-teal">New tenant registered</p>
-                        <p className="text-xs text-teal/60">Tower A, Unit 1205</p>
-                        <p className="text-xs text-teal/40">2 hours ago</p>
+                    {[
+                      { action: "New tenant registered", property: "Tower A, Unit 1205", time: "2 hours ago" },
+                      { action: "Maintenance request completed", property: "Tower B, Unit 804", time: "5 hours ago" },
+                      { action: "Amenity booking confirmed", property: "Pool Area", time: "1 day ago" },
+                    ].map((activity, index) => (
+                      <div key={index} className="flex items-start gap-3 pb-3 border-b last:border-0">
+                        <div className="h-2 w-2 rounded-full bg-teal mt-2" />
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{activity.action}</p>
+                          <p className="text-xs text-gray-600">{activity.property}</p>
+                          <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-start space-x-3 p-3 rounded-lg hover:bg-stone/5">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-teal">Maintenance request completed</p>
-                        <p className="text-xs text-teal/60">Tower B, Unit 804</p>
-                        <p className="text-xs text-teal/40">5 hours ago</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-3 p-3 rounded-lg hover:bg-stone/5">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-teal">Amenity booking confirmed</p>
-                        <p className="text-xs text-teal/60">Pool Area</p>
-                        <p className="text-xs text-teal/40">1 day ago</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-teal font-serif">Quick Actions</CardTitle>
+                  <CardTitle>Quick Actions</CardTitle>
                   <CardDescription>Common management tasks</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Button
-                      onClick={() => setActiveTab("properties")}
-                      className="h-24 flex-col space-y-2 bg-gradient-to-br from-teal/10 to-teal/20 text-teal hover:from-teal/20 hover:to-teal/30 border-0"
-                    >
-                      <Plus className="h-6 w-6" />
-                      <span className="text-sm">Add Property</span>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button className="h-20 flex-col gap-2 bg-transparent" variant="outline">
+                      <Plus className="h-5 w-5" />
+                      <span className="text-xs">Add Property</span>
                     </Button>
-                    <Button
-                      onClick={() => setActiveTab("tenants")}
-                      className="h-24 flex-col space-y-2 bg-gradient-to-br from-gold/10 to-gold/20 text-gold hover:from-gold/20 hover:to-gold/30 border-0"
-                    >
-                      <UserCheck className="h-6 w-6" />
-                      <span className="text-sm">Add Tenant</span>
+                    <Button className="h-20 flex-col gap-2 bg-transparent" variant="outline">
+                      <UserCheck className="h-5 w-5" />
+                      <span className="text-xs">Add Tenant</span>
                     </Button>
-                    <Button
-                      onClick={() => setActiveTab("amenity-bookings")}
-                      className="h-24 flex-col space-y-2 bg-gradient-to-br from-coral/10 to-coral/20 text-coral hover:from-coral/20 hover:to-coral/30 border-0"
-                    >
-                      <Calendar className="h-6 w-6" />
-                      <span className="text-sm">View Bookings</span>
+                    <Button className="h-20 flex-col gap-2 bg-transparent" variant="outline">
+                      <Calendar className="h-5 w-5" />
+                      <span className="text-xs">View Bookings</span>
                     </Button>
-                    <Button
-                      onClick={() => setActiveTab("reports")}
-                      className="h-24 flex-col space-y-2 bg-gradient-to-br from-stone/10 to-stone/20 text-stone hover:from-stone/20 hover:to-stone/30 border-0"
-                    >
-                      <FileText className="h-6 w-6" />
-                      <span className="text-sm">Generate Report</span>
+                    <Button className="h-20 flex-col gap-2 bg-transparent" variant="outline">
+                      <FileText className="h-5 w-5" />
+                      <span className="text-xs">Generate Report</span>
                     </Button>
                   </div>
                 </CardContent>
@@ -577,54 +250,259 @@ export default function BuildingManagerDashboard() {
 
           {/* Properties Tab */}
           <TabsContent value="properties" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Property Management</h2>
-                <p className="text-teal/60">Manage all properties in your portfolio</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Property
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Property Management</CardTitle>
+                    <CardDescription>Add, edit, and manage all properties</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Property
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Add New Property</DialogTitle>
+                        <DialogDescription>Enter property details</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="property-name-en">Name (English)</Label>
+                            <Input id="property-name-en" placeholder="Luxury Villa" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="property-name-ar">Name (Arabic)</Label>
+                            <Input id="property-name-ar" placeholder="فيلا فاخرة" />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="location">Location</Label>
+                          <Input id="location" placeholder="Dubai, UAE" />
+                        </div>
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="area">Area (sqft)</Label>
+                            <Input id="area" type="number" placeholder="1450" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="bedrooms">Bedrooms</Label>
+                            <Input id="bedrooms" type="number" placeholder="3" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="floor">Floor</Label>
+                            <Input id="floor" type="number" placeholder="12" />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="property-type">Property Type</Label>
+                            <Select>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="apartment">Apartment</SelectItem>
+                                <SelectItem value="villa">Villa</SelectItem>
+                                <SelectItem value="townhouse">Townhouse</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="adults">Number of Adults</Label>
+                            <Input id="adults" type="number" placeholder="4" />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="owner">Owner</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select owner" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="owner1">John Doe</SelectItem>
+                              <SelectItem value="owner2">Jane Smith</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="tenant">Tenant (Optional)</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select tenant" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="tenant1">Ahmed Ali</SelectItem>
+                              <SelectItem value="tenant2">Sara Mohammed</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <input type="checkbox" id="handed-over" className="rounded" />
+                          <Label htmlFor="handed-over">Property Handed Over</Label>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Property Documents</Label>
+                          <Button variant="outline" className="w-full bg-transparent">
+                            <Upload className="h-4 w-4 mr-2" />
+                            Upload Documents
+                          </Button>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Property
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      placeholder="Search properties..."
+                      className="pl-10"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Properties</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="inactive">Inactive</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name (EN)</TableHead>
-                      <TableHead>Name (AR)</TableHead>
+                      <TableHead>Property Name</TableHead>
                       <TableHead>Location</TableHead>
-                      <TableHead>Area</TableHead>
-                      <TableHead>Bedrooms</TableHead>
-                      <TableHead>Floor</TableHead>
                       <TableHead>Type</TableHead>
+                      <TableHead>Bedrooms</TableHead>
+                      <TableHead>Area</TableHead>
+                      <TableHead>Owner</TableHead>
+                      <TableHead>Tenant</TableHead>
+                      <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {properties.map((property) => (
-                      <TableRow key={property.id}>
-                        <TableCell className="font-medium">{property.nameEn}</TableCell>
-                        <TableCell>{property.nameAr}</TableCell>
-                        <TableCell>{property.location}</TableCell>
-                        <TableCell>{property.area}</TableCell>
-                        <TableCell>{property.bedrooms}</TableCell>
-                        <TableCell>{property.floor}</TableCell>
-                        <TableCell>{property.type}</TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingProperty(property)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">Palm Tower Apt 1201</TableCell>
+                      <TableCell>Dubai Marina</TableCell>
+                      <TableCell>Apartment</TableCell>
+                      <TableCell>3</TableCell>
+                      <TableCell>1450 sqft</TableCell>
+                      <TableCell>John Doe</TableCell>
+                      <TableCell>Ahmed Ali</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button size="icon" variant="ghost">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Dialog
+                            open={editingProperty !== null}
+                            onOpenChange={(open) => !open && setEditingProperty(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingProperty({
+                                    id: 1,
+                                    nameEn: "Palm Tower Apt 1201",
+                                    nameAr: "برج النخلة شقة 1201",
+                                    location: "Dubai Marina",
+                                    type: "apartment",
+                                    bedrooms: 3,
+                                    area: 1450,
+                                    floor: 12,
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                              <DialogHeader>
+                                <DialogTitle>Edit Property</DialogTitle>
+                                <DialogDescription>Update property details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-property-name-en">Name (English)</Label>
+                                    <Input id="edit-property-name-en" defaultValue={editingProperty?.nameEn} />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-property-name-ar">Name (Arabic)</Label>
+                                    <Input id="edit-property-name-ar" defaultValue={editingProperty?.nameAr} />
+                                  </div>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-location">Location</Label>
+                                  <Input id="edit-location" defaultValue={editingProperty?.location} />
+                                </div>
+                                <div className="grid grid-cols-3 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-area">Area (sqft)</Label>
+                                    <Input id="edit-area" type="number" defaultValue={editingProperty?.area} />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-bedrooms">Bedrooms</Label>
+                                    <Input id="edit-bedrooms" type="number" defaultValue={editingProperty?.bedrooms} />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-floor">Floor</Label>
+                                    <Input id="edit-floor" type="number" defaultValue={editingProperty?.floor} />
+                                  </div>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-property-type">Property Type</Label>
+                                  <Select defaultValue={editingProperty?.type}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="apartment">Apartment</SelectItem>
+                                      <SelectItem value="villa">Villa</SelectItem>
+                                      <SelectItem value="townhouse">Townhouse</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingProperty(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Property
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -633,54 +511,106 @@ export default function BuildingManagerDashboard() {
 
           {/* Tenants Tab */}
           <TabsContent value="tenants" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Tenant Management</h2>
-                <p className="text-teal/60">Manage tenant information and leases</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Tenant
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Tenant Management</CardTitle>
+                    <CardDescription>Add, edit, and manage tenants</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Tenant
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Add New Tenant</DialogTitle>
+                        <DialogDescription>Enter tenant details</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="first-name">First Name</Label>
+                            <Input id="first-name" placeholder="John" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="last-name">Last Name</Label>
+                            <Input id="last-name" placeholder="Doe" />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email</Label>
+                          <Input id="email" type="email" placeholder="john.doe@example.com" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="phone">Phone Number</Label>
+                          <Input id="phone" placeholder="+971 50 123 4567" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="home-address">Home Address</Label>
+                          <Textarea id="home-address" placeholder="Enter home address" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="delivery-address">Delivery Address</Label>
+                          <Textarea id="delivery-address" placeholder="Enter delivery address" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="property-connect">Connect to Property</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select property" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="prop1">Palm Tower Apt 1201</SelectItem>
+                              <SelectItem value="prop2">Marina View Villa</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Tenant
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Phone</TableHead>
-                      <TableHead>Unit</TableHead>
                       <TableHead>Property</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {tenants.map((tenant) => (
-                      <TableRow key={tenant.id}>
-                        <TableCell className="font-medium">{tenant.name}</TableCell>
-                        <TableCell>{tenant.email}</TableCell>
-                        <TableCell>{tenant.phone}</TableCell>
-                        <TableCell>{tenant.unit}</TableCell>
-                        <TableCell>{tenant.property}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(tenant.status)}>{tenant.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingTenant(tenant)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">Ahmed Ali</TableCell>
+                      <TableCell>ahmed.ali@example.com</TableCell>
+                      <TableCell>+971 50 123 4567</TableCell>
+                      <TableCell>Palm Tower Apt 1201</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button size="icon" variant="ghost">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -689,19 +619,75 @@ export default function BuildingManagerDashboard() {
 
           {/* Landlords Tab */}
           <TabsContent value="landlords" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Landlord Management</h2>
-                <p className="text-teal/60">Manage property owners and their portfolios</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Landlord
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Landlord Management</CardTitle>
+                    <CardDescription>Add, edit, and manage landlords</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Landlord
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Add New Landlord</DialogTitle>
+                        <DialogDescription>Enter landlord details</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="landlord-first-name">First Name</Label>
+                            <Input id="landlord-first-name" placeholder="John" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="landlord-last-name">Last Name</Label>
+                            <Input id="landlord-last-name" placeholder="Doe" />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="landlord-email">Email</Label>
+                          <Input id="landlord-email" type="email" placeholder="john.doe@example.com" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="landlord-phone">Phone Number</Label>
+                          <Input id="landlord-phone" placeholder="+971 50 123 4567" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="landlord-home-address">Home Address</Label>
+                          <Textarea id="landlord-home-address" placeholder="Enter home address" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="landlord-delivery-address">Delivery Address</Label>
+                          <Textarea id="landlord-delivery-address" placeholder="Enter delivery address" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="landlord-property-connect">Connect to Property</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select property" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="prop1">Palm Tower Apt 1201</SelectItem>
+                              <SelectItem value="prop2">Marina View Villa</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Landlord
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -714,27 +700,25 @@ export default function BuildingManagerDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {landlords.map((landlord) => (
-                      <TableRow key={landlord.id}>
-                        <TableCell className="font-medium">{landlord.name}</TableCell>
-                        <TableCell>{landlord.email}</TableCell>
-                        <TableCell>{landlord.phone}</TableCell>
-                        <TableCell>{landlord.properties} Properties</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(landlord.status)}>{landlord.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingLandlord(landlord)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">John Doe</TableCell>
+                      <TableCell>john.doe@example.com</TableCell>
+                      <TableCell>+971 50 987 6543</TableCell>
+                      <TableCell>3 Properties</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button size="icon" variant="ghost">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -743,47 +727,73 @@ export default function BuildingManagerDashboard() {
 
           {/* Visits Tab */}
           <TabsContent value="visits" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Visit Management</h2>
-                <p className="text-teal/60">Manage visitor requests and approvals</p>
-              </div>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Visit Management</CardTitle>
+                <CardDescription>Manage visitor approvals and access</CardDescription>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Visitor Name</TableHead>
+                      <TableHead>Phone</TableHead>
+                      <TableHead>Property</TableHead>
                       <TableHead>Purpose</TableHead>
-                      <TableHead>Tenant</TableHead>
-                      <TableHead>Unit</TableHead>
                       <TableHead>Date</TableHead>
+                      <TableHead>Guests</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {visits.map((visit) => (
-                      <TableRow key={visit.id}>
-                        <TableCell className="font-medium">{visit.visitorName}</TableCell>
-                        <TableCell>{visit.purpose}</TableCell>
-                        <TableCell>{visit.tenant}</TableCell>
-                        <TableCell>{visit.unit}</TableCell>
-                        <TableCell>{visit.date}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(visit.status)}>{visit.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingVisit(visit)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">John Smith</TableCell>
+                      <TableCell>+971 50 111 2222</TableCell>
+                      <TableCell>Palm Tower Apt 1201</TableCell>
+                      <TableCell>Delivery</TableCell>
+                      <TableCell>2025-01-28</TableCell>
+                      <TableCell>2</TableCell>
+                      <TableCell>
+                        <Badge className="bg-yellow-500">Pending</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <Edit className="h-4 w-4 mr-1" />
+                                Update
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Update Visit Status</DialogTitle>
+                                <DialogDescription>Change approval status</DialogDescription>
+                              </DialogHeader>
+                              <div className="space-y-4 py-4">
+                                <div className="space-y-2">
+                                  <Label>Approval Status</Label>
+                                  <Select>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="PENDING">Pending</SelectItem>
+                                      <SelectItem value="APPROVED">Approved</SelectItem>
+                                      <SelectItem value="REJECTED">Rejected</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button className="bg-teal hover:bg-teal/90">Update Status</Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -792,58 +802,205 @@ export default function BuildingManagerDashboard() {
 
           {/* Visit Purposes Tab */}
           <TabsContent value="visit-purposes" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Visit Purpose Management</h2>
-                <p className="text-teal/60">Manage visit purpose types</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Visit Purpose
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Visit Purpose Management</CardTitle>
+                    <CardDescription>Manage visit purpose types</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Purpose
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Visit Purpose</DialogTitle>
+                        <DialogDescription>Create a new visit purpose type</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="purpose-name-en">Name (English)</Label>
+                            <Input id="purpose-name-en" placeholder="Delivery" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="purpose-name-ar">Name (Arabic)</Label>
+                            <Input id="purpose-name-ar" placeholder="توصيل" />
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <input type="checkbox" id="auto-approval" className="rounded" />
+                          <Label htmlFor="auto-approval">Enable Auto Approval</Label>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Purpose
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name (EN)</TableHead>
-                      <TableHead>Name (AR)</TableHead>
-                      <TableHead>Auto Approve</TableHead>
+                      <TableHead>Purpose Name</TableHead>
+                      <TableHead>Auto Approval</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {visitPurposes.map((purpose) => (
-                      <TableRow key={purpose.id}>
-                        <TableCell className="font-medium">{purpose.nameEn}</TableCell>
-                        <TableCell>{purpose.nameAr}</TableCell>
-                        <TableCell>
-                          <Badge
-                            className={
-                              purpose.autoApprove ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                            }
+                    <TableRow>
+                      <TableCell className="font-medium">Delivery</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Enabled</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingVisitPurpose !== null}
+                            onOpenChange={(open) => !open && setEditingVisitPurpose(null)}
                           >
-                            {purpose.autoApprove ? "Yes" : "No"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(purpose.status)}>{purpose.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingVisitPurpose(purpose)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingVisitPurpose({
+                                    id: 1,
+                                    nameEn: "Delivery",
+                                    nameAr: "توصيل",
+                                    autoApproval: true,
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Visit Purpose</DialogTitle>
+                                <DialogDescription>Update visit purpose details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-purpose-name-en">Name (English)</Label>
+                                    <Input id="edit-purpose-name-en" defaultValue={editingVisitPurpose?.nameEn} />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-purpose-name-ar">Name (Arabic)</Label>
+                                    <Input id="edit-purpose-name-ar" defaultValue={editingVisitPurpose?.nameAr} />
+                                  </div>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <input
+                                    type="checkbox"
+                                    id="edit-auto-approval"
+                                    className="rounded"
+                                    defaultChecked={editingVisitPurpose?.autoApproval}
+                                  />
+                                  <Label htmlFor="edit-auto-approval">Enable Auto Approval</Label>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingVisitPurpose(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Purpose
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-medium">Maintenance</TableCell>
+                      <TableCell>
+                        <Badge className="bg-red-500">Disabled</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingVisitPurpose !== null}
+                            onOpenChange={(open) => !open && setEditingVisitPurpose(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingVisitPurpose({
+                                    id: 2,
+                                    nameEn: "Maintenance",
+                                    nameAr: "صيانة",
+                                    autoApproval: false,
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Visit Purpose</DialogTitle>
+                                <DialogDescription>Update visit purpose details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-purpose-name-en">Name (English)</Label>
+                                    <Input id="edit-purpose-name-en" defaultValue={editingVisitPurpose?.nameEn} />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-purpose-name-ar">Name (Arabic)</Label>
+                                    <Input id="edit-purpose-name-ar" defaultValue={editingVisitPurpose?.nameAr} />
+                                  </div>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <input
+                                    type="checkbox"
+                                    id="edit-auto-approval"
+                                    className="rounded"
+                                    defaultChecked={editingVisitPurpose?.autoApproval}
+                                  />
+                                  <Label htmlFor="edit-auto-approval">Enable Auto Approval</Label>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingVisitPurpose(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Purpose
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -852,25 +1009,79 @@ export default function BuildingManagerDashboard() {
 
           {/* Amenities Tab */}
           <TabsContent value="amenities" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Amenity Management</h2>
-                <p className="text-teal/60">Manage property amenities and facilities</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Amenity
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Amenity Management</CardTitle>
+                    <CardDescription>Manage property amenities</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Amenity
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add New Amenity</DialogTitle>
+                        <DialogDescription>Create a new amenity</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="amenity-property">Property</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select property" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="prop1">Palm Tower</SelectItem>
+                              <SelectItem value="prop2">Marina View</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="amenity-name">Amenity Name</Label>
+                          <Input id="amenity-name" placeholder="Swimming Pool" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="amenity-description">Description</Label>
+                          <Textarea id="amenity-description" placeholder="Enter description" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="amenity-capacity">Capacity</Label>
+                            <Input id="amenity-capacity" type="number" placeholder="20" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="amenity-price">Price (AED)</Label>
+                            <Input id="amenity-price" type="number" placeholder="100" />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Amenity Image</Label>
+                          <Button variant="outline" className="w-full bg-transparent">
+                            <Upload className="h-4 w-4 mr-2" />
+                            Upload Image
+                          </Button>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Amenity
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>Amenity Name</TableHead>
                       <TableHead>Property</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Description</TableHead>
                       <TableHead>Capacity</TableHead>
                       <TableHead>Price</TableHead>
                       <TableHead>Status</TableHead>
@@ -878,28 +1089,95 @@ export default function BuildingManagerDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {amenities.map((amenity) => (
-                      <TableRow key={amenity.id}>
-                        <TableCell className="font-medium">{amenity.property}</TableCell>
-                        <TableCell>{amenity.name}</TableCell>
-                        <TableCell>{amenity.description}</TableCell>
-                        <TableCell>{amenity.capacity}</TableCell>
-                        <TableCell>{amenity.price}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(amenity.status)}>{amenity.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingAmenity(amenity)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">Swimming Pool</TableCell>
+                      <TableCell>Palm Tower</TableCell>
+                      <TableCell>20 people</TableCell>
+                      <TableCell>AED 100</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingAmenity !== null}
+                            onOpenChange={(open) => !open && setEditingAmenity(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingAmenity({
+                                    id: 1,
+                                    name: "Swimming Pool",
+                                    property: "Palm Tower",
+                                    capacity: 20,
+                                    price: 100,
+                                    description: "Olympic-sized swimming pool",
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Amenity</DialogTitle>
+                                <DialogDescription>Update amenity details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-amenity-property">Property</Label>
+                                  <Select defaultValue="prop1">
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select property" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="prop1">Palm Tower</SelectItem>
+                                      <SelectItem value="prop2">Marina View</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-amenity-name">Amenity Name</Label>
+                                  <Input id="edit-amenity-name" defaultValue={editingAmenity?.name} />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-amenity-description">Description</Label>
+                                  <Textarea id="edit-amenity-description" defaultValue={editingAmenity?.description} />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-amenity-capacity">Capacity</Label>
+                                    <Input
+                                      id="edit-amenity-capacity"
+                                      type="number"
+                                      defaultValue={editingAmenity?.capacity}
+                                    />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-amenity-price">Price (AED)</Label>
+                                    <Input id="edit-amenity-price" type="number" defaultValue={editingAmenity?.price} />
+                                  </div>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingAmenity(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Amenity
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -908,45 +1186,69 @@ export default function BuildingManagerDashboard() {
 
           {/* Amenity Bookings Tab */}
           <TabsContent value="amenity-bookings" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Amenity Booking Management</h2>
-                <p className="text-teal/60">Manage amenity reservations</p>
-              </div>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Amenity Booking Management</CardTitle>
+                <CardDescription>Manage amenity bookings and approvals</CardDescription>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Amenity</TableHead>
+                      <TableHead>Property</TableHead>
                       <TableHead>Tenant</TableHead>
                       <TableHead>Date</TableHead>
-                      <TableHead>Time</TableHead>
+                      <TableHead>Guests</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {amenityBookings.map((booking) => (
-                      <TableRow key={booking.id}>
-                        <TableCell className="font-medium">{booking.amenity}</TableCell>
-                        <TableCell>{booking.tenant}</TableCell>
-                        <TableCell>{booking.date}</TableCell>
-                        <TableCell>{booking.time}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(booking.status)}>{booking.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingAmenityBooking(booking)}>
-                              <Edit className="h-4 w-4" />
+                    <TableRow>
+                      <TableCell className="font-medium">Swimming Pool</TableCell>
+                      <TableCell>Palm Tower</TableCell>
+                      <TableCell>Ahmed Ali</TableCell>
+                      <TableCell>2025-01-30</TableCell>
+                      <TableCell>5</TableCell>
+                      <TableCell>
+                        <Badge className="bg-yellow-500">Pending</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button size="sm" variant="outline">
+                              <Edit className="h-4 w-4 mr-1" />
+                              Update
                             </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Update Booking Status</DialogTitle>
+                              <DialogDescription>Change booking status</DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4 py-4">
+                              <div className="space-y-2">
+                                <Label>Booking Status</Label>
+                                <Select>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="PENDING">Pending</SelectItem>
+                                    <SelectItem value="CONFIRMED">Confirmed</SelectItem>
+                                    <SelectItem value="COMPLETED">Completed</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button className="bg-teal hover:bg-teal/90">Update Status</Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -955,52 +1257,160 @@ export default function BuildingManagerDashboard() {
 
           {/* Home Services Tab */}
           <TabsContent value="home-services" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Home Service Management</h2>
-                <p className="text-teal/60">Manage available home services</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Home Service
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Home Service Management</CardTitle>
+                    <CardDescription>Manage available home services</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Service
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Home Service</DialogTitle>
+                        <DialogDescription>Create a new home service</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="service-property">Property</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select property" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="prop1">Palm Tower</SelectItem>
+                              <SelectItem value="prop2">Marina View</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="service-title">Service Title</Label>
+                          <Input id="service-title" placeholder="AC Maintenance" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="service-name">Service Name</Label>
+                          <Input id="service-name" placeholder="Air Conditioning Service" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="service-price">Base Price (AED)</Label>
+                          <Input id="service-price" type="number" placeholder="150" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Service Image</Label>
+                          <Button variant="outline" className="w-full bg-transparent">
+                            <Upload className="h-4 w-4 mr-2" />
+                            Upload Image
+                          </Button>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Service
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>Service Title</TableHead>
                       <TableHead>Property</TableHead>
-                      <TableHead>Title</TableHead>
-                      <TableHead>Name</TableHead>
                       <TableHead>Base Price</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {homeServices.map((service) => (
-                      <TableRow key={service.id}>
-                        <TableCell className="font-medium">{service.property}</TableCell>
-                        <TableCell>{service.title}</TableCell>
-                        <TableCell>{service.name}</TableCell>
-                        <TableCell>{service.basePrice}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(service.status)}>{service.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingHomeService(service)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">AC Maintenance</TableCell>
+                      <TableCell>Palm Tower</TableCell>
+                      <TableCell>AED 150</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingHomeService !== null}
+                            onOpenChange={(open) => !open && setEditingHomeService(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingHomeService({
+                                    id: 1,
+                                    title: "AC Maintenance",
+                                    name: "Air Conditioning Service",
+                                    property: "Palm Tower",
+                                    price: 150,
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Home Service</DialogTitle>
+                                <DialogDescription>Update service details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-service-property">Property</Label>
+                                  <Select defaultValue="prop1">
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select property" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="prop1">Palm Tower</SelectItem>
+                                      <SelectItem value="prop2">Marina View</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-service-title">Service Title</Label>
+                                  <Input id="edit-service-title" defaultValue={editingHomeService?.title} />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-service-name">Service Name</Label>
+                                  <Input id="edit-service-name" defaultValue={editingHomeService?.name} />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-service-price">Base Price (AED)</Label>
+                                  <Input
+                                    id="edit-service-price"
+                                    type="number"
+                                    defaultValue={editingHomeService?.price}
+                                  />
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingHomeService(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Service
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -1009,52 +1419,142 @@ export default function BuildingManagerDashboard() {
 
           {/* Service Products Tab */}
           <TabsContent value="service-products" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Home Service Product Management</h2>
-                <p className="text-teal/60">Manage service products and add-ons</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Service Product
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Home Service Product Management</CardTitle>
+                    <CardDescription>Manage service product options</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Product
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Service Product</DialogTitle>
+                        <DialogDescription>Create a new service product option</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="product-service">Home Service</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select service" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="service1">AC Maintenance</SelectItem>
+                              <SelectItem value="service2">Plumbing</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="product-name-en">Product Name (English)</Label>
+                            <Input id="product-name-en" placeholder="Filter Replacement" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="product-name-ar">Product Name (Arabic)</Label>
+                            <Input id="product-name-ar" placeholder="استبدال الفلتر" />
+                          </div>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Product
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Name (EN)</TableHead>
-                      <TableHead>Name (AR)</TableHead>
-                      <TableHead>Price</TableHead>
+                      <TableHead>Product Name</TableHead>
+                      <TableHead>Home Service</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {serviceProducts.map((product) => (
-                      <TableRow key={product.id}>
-                        <TableCell className="font-medium">{product.service}</TableCell>
-                        <TableCell>{product.nameEn}</TableCell>
-                        <TableCell>{product.nameAr}</TableCell>
-                        <TableCell>{product.price}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(product.status)}>{product.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingServiceProduct(product)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">Filter Replacement</TableCell>
+                      <TableCell>AC Maintenance</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingServiceProduct !== null}
+                            onOpenChange={(open) => !open && setEditingServiceProduct(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingServiceProduct({
+                                    id: 1,
+                                    nameEn: "Filter Replacement",
+                                    nameAr: "استبدال الفلتر",
+                                    service: "AC Maintenance",
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Service Product</DialogTitle>
+                                <DialogDescription>Update product details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-product-service">Home Service</Label>
+                                  <Select defaultValue="service1">
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select service" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="service1">AC Maintenance</SelectItem>
+                                      <SelectItem value="service2">Plumbing</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-product-name-en">Product Name (English)</Label>
+                                    <Input id="edit-product-name-en" defaultValue={editingServiceProduct?.nameEn} />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-product-name-ar">Product Name (Arabic)</Label>
+                                    <Input id="edit-product-name-ar" defaultValue={editingServiceProduct?.nameAr} />
+                                  </div>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingServiceProduct(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Product
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -1063,45 +1563,69 @@ export default function BuildingManagerDashboard() {
 
           {/* Service Bookings Tab */}
           <TabsContent value="service-bookings" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Service Booking Management</h2>
-                <p className="text-teal/60">Manage home service bookings</p>
-              </div>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Home Service Booking Management</CardTitle>
+                <CardDescription>Manage service bookings and status</CardDescription>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Service</TableHead>
+                      <TableHead>Property</TableHead>
                       <TableHead>Tenant</TableHead>
                       <TableHead>Date</TableHead>
-                      <TableHead>Time</TableHead>
+                      <TableHead>Provider</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {serviceBookings.map((booking) => (
-                      <TableRow key={booking.id}>
-                        <TableCell className="font-medium">{booking.service}</TableCell>
-                        <TableCell>{booking.tenant}</TableCell>
-                        <TableCell>{booking.date}</TableCell>
-                        <TableCell>{booking.time}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(booking.status)}>{booking.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingServiceBooking(booking)}>
-                              <Edit className="h-4 w-4" />
+                    <TableRow>
+                      <TableCell className="font-medium">AC Maintenance</TableCell>
+                      <TableCell>Palm Tower Apt 1201</TableCell>
+                      <TableCell>Ahmed Ali</TableCell>
+                      <TableCell>2025-01-29</TableCell>
+                      <TableCell>Cool Tech Services</TableCell>
+                      <TableCell>
+                        <Badge className="bg-yellow-500">Pending</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button size="sm" variant="outline">
+                              <Edit className="h-4 w-4 mr-1" />
+                              Update
                             </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Update Booking Status</DialogTitle>
+                              <DialogDescription>Change service booking status</DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4 py-4">
+                              <div className="space-y-2">
+                                <Label>Service Status</Label>
+                                <Select>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="PENDING">Pending</SelectItem>
+                                    <SelectItem value="CONFIRMED">Confirmed</SelectItem>
+                                    <SelectItem value="COMPLETED">Completed</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button className="bg-teal hover:bg-teal/90">Update Status</Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -1110,25 +1634,80 @@ export default function BuildingManagerDashboard() {
 
           {/* Service Providers Tab */}
           <TabsContent value="service-providers" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Service Provider Management</h2>
-                <p className="text-teal/60">Manage service provider vendors</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Service Provider
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Service Provider Management</CardTitle>
+                    <CardDescription>Manage service providers and vendors</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Provider
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Service Provider</DialogTitle>
+                        <DialogDescription>Register a new service provider</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="provider-service">Service Type</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select service" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="service1">AC Maintenance</SelectItem>
+                              <SelectItem value="service2">Plumbing</SelectItem>
+                              <SelectItem value="service3">Electrical</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="provider-name-en">Name (English)</Label>
+                            <Input id="provider-name-en" placeholder="Cool Tech Services" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="provider-name-ar">Name (Arabic)</Label>
+                            <Input id="provider-name-ar" placeholder="خدمات التبريد" />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="provider-email">Email</Label>
+                          <Input id="provider-email" type="email" placeholder="info@cooltech.com" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="provider-phone">Phone</Label>
+                          <Input id="provider-phone" placeholder="+971 4 123 4567" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Provider Logo</Label>
+                          <Button variant="outline" className="w-full bg-transparent">
+                            <Upload className="h-4 w-4 mr-2" />
+                            Upload Logo
+                          </Button>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Provider
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>Provider Name</TableHead>
                       <TableHead>Service Type</TableHead>
-                      <TableHead>Name (EN)</TableHead>
-                      <TableHead>Name (AR)</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Phone</TableHead>
                       <TableHead>Status</TableHead>
@@ -1136,28 +1715,96 @@ export default function BuildingManagerDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {serviceProviders.map((provider) => (
-                      <TableRow key={provider.id}>
-                        <TableCell className="font-medium">{provider.serviceType}</TableCell>
-                        <TableCell>{provider.nameEn}</TableCell>
-                        <TableCell>{provider.nameAr}</TableCell>
-                        <TableCell>{provider.email}</TableCell>
-                        <TableCell>{provider.phone}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(provider.status)}>{provider.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingServiceProvider(provider)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">Cool Tech Services</TableCell>
+                      <TableCell>AC Maintenance</TableCell>
+                      <TableCell>info@cooltech.com</TableCell>
+                      <TableCell>+971 4 123 4567</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingServiceProvider !== null}
+                            onOpenChange={(open) => !open && setEditingServiceProvider(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingServiceProvider({
+                                    id: 1,
+                                    nameEn: "Cool Tech Services",
+                                    nameAr: "خدمات التبريد",
+                                    email: "info@cooltech.com",
+                                    phone: "+971 4 123 4567",
+                                    service: "AC Maintenance",
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Service Provider</DialogTitle>
+                                <DialogDescription>Update provider details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-provider-service">Service Type</Label>
+                                  <Select defaultValue="service1">
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select service" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="service1">AC Maintenance</SelectItem>
+                                      <SelectItem value="service2">Plumbing</SelectItem>
+                                      <SelectItem value="service3">Electrical</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-provider-name-en">Name (English)</Label>
+                                    <Input id="edit-provider-name-en" defaultValue={editingServiceProvider?.nameEn} />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="edit-provider-name-ar">Name (Arabic)</Label>
+                                    <Input id="edit-provider-name-ar" defaultValue={editingServiceProvider?.nameAr} />
+                                  </div>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-provider-email">Email</Label>
+                                  <Input
+                                    id="edit-provider-email"
+                                    type="email"
+                                    defaultValue={editingServiceProvider?.email}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-provider-phone">Phone</Label>
+                                  <Input id="edit-provider-phone" defaultValue={editingServiceProvider?.phone} />
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingServiceProvider(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Provider
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -1166,55 +1813,72 @@ export default function BuildingManagerDashboard() {
 
           {/* Reports Tab */}
           <TabsContent value="reports" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Report Management</h2>
-                <p className="text-teal/60">Manage tenant reports and issues</p>
-              </div>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Report Management</CardTitle>
+                <CardDescription>Manage tenant reports and issues</CardDescription>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Title</TableHead>
                       <TableHead>Category</TableHead>
                       <TableHead>Priority</TableHead>
-                      <TableHead>Tenant</TableHead>
+                      <TableHead>Reported By</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {reports.map((report) => (
-                      <TableRow key={report.id}>
-                        <TableCell className="font-medium">{report.title}</TableCell>
-                        <TableCell>{report.category}</TableCell>
-                        <TableCell>
-                          <Badge
-                            className={
-                              report.priority === "High" ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800"
-                            }
-                          >
-                            {report.priority}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{report.tenant}</TableCell>
-                        <TableCell>{report.date}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(report.status)}>{report.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingReport(report)}>
-                              <Edit className="h-4 w-4" />
+                    <TableRow>
+                      <TableCell className="font-medium">Broken AC Unit</TableCell>
+                      <TableCell>Maintenance</TableCell>
+                      <TableCell>
+                        <Badge className="bg-red-500">High</Badge>
+                      </TableCell>
+                      <TableCell>Ahmed Ali</TableCell>
+                      <TableCell>2025-01-28</TableCell>
+                      <TableCell>
+                        <Badge className="bg-yellow-500">Pending</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button size="sm" variant="outline">
+                              <Edit className="h-4 w-4 mr-1" />
+                              Update
                             </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Update Report Status</DialogTitle>
+                              <DialogDescription>Change report status</DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4 py-4">
+                              <div className="space-y-2">
+                                <Label>Report Status</Label>
+                                <Select>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="PENDING">Pending</SelectItem>
+                                    <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                                    <SelectItem value="COMPLETED">Completed</SelectItem>
+                                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button className="bg-teal hover:bg-teal/90">Update Status</Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -1223,19 +1887,53 @@ export default function BuildingManagerDashboard() {
 
           {/* Report Priorities Tab */}
           <TabsContent value="report-priorities" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Report Priority Management</h2>
-                <p className="text-teal/60">Manage report priority levels</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Priority
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Report Priority Management</CardTitle>
+                    <CardDescription>Manage report priority levels</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Priority
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Report Priority</DialogTitle>
+                        <DialogDescription>Create a new priority level</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="priority-name">Priority Name</Label>
+                          <Input id="priority-name" placeholder="High Priority" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="priority-status">Status</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Priority
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -1245,24 +1943,136 @@ export default function BuildingManagerDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {reportPriorities.map((priority) => (
-                      <TableRow key={priority.id}>
-                        <TableCell className="font-medium">{priority.name}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(priority.status)}>{priority.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingReportPriority(priority)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">High Priority</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingReportPriority !== null}
+                            onOpenChange={(open) => !open && setEditingReportPriority(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingReportPriority({
+                                    id: 1,
+                                    name: "High Priority",
+                                    status: "ACTIVE",
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Report Priority</DialogTitle>
+                                <DialogDescription>Update priority details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-priority-name">Priority Name</Label>
+                                  <Input id="edit-priority-name" defaultValue={editingReportPriority?.name} />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-priority-status">Status</Label>
+                                  <Select defaultValue={editingReportPriority?.status}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="ACTIVE">Active</SelectItem>
+                                      <SelectItem value="INACTIVE">Inactive</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingReportPriority(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Priority
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-medium">Medium Priority</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingReportPriority !== null}
+                            onOpenChange={(open) => !open && setEditingReportPriority(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingReportPriority({
+                                    id: 2,
+                                    name: "Medium Priority",
+                                    status: "ACTIVE",
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Report Priority</DialogTitle>
+                                <DialogDescription>Update priority details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-priority-name">Priority Name</Label>
+                                  <Input id="edit-priority-name" defaultValue={editingReportPriority?.name} />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-priority-status">Status</Label>
+                                  <Select defaultValue={editingReportPriority?.status}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="ACTIVE">Active</SelectItem>
+                                      <SelectItem value="INACTIVE">Inactive</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingReportPriority(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Priority
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -1271,19 +2081,53 @@ export default function BuildingManagerDashboard() {
 
           {/* Report Categories Tab */}
           <TabsContent value="report-categories" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Report Category Management</h2>
-                <p className="text-teal/60">Manage report category types</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Category
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Report Category Management</CardTitle>
+                    <CardDescription>Manage report categories</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Category
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Report Category</DialogTitle>
+                        <DialogDescription>Create a new report category</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="category-name">Category Name</Label>
+                          <Input id="category-name" placeholder="Maintenance" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="category-status">Status</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Category
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -1293,24 +2137,136 @@ export default function BuildingManagerDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {reportCategories.map((category) => (
-                      <TableRow key={category.id}>
-                        <TableCell className="font-medium">{category.name}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(category.status)}>{category.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingReportCategory(category)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">Maintenance</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingReportCategory !== null}
+                            onOpenChange={(open) => !open && setEditingReportCategory(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingReportCategory({
+                                    id: 1,
+                                    name: "Maintenance",
+                                    status: "ACTIVE",
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Report Category</DialogTitle>
+                                <DialogDescription>Update category details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-category-name">Category Name</Label>
+                                  <Input id="edit-category-name" defaultValue={editingReportCategory?.name} />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-category-status">Status</Label>
+                                  <Select defaultValue={editingReportCategory?.status}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="ACTIVE">Active</SelectItem>
+                                      <SelectItem value="INACTIVE">Inactive</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingReportCategory(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Category
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-medium">Security</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingReportCategory !== null}
+                            onOpenChange={(open) => !open && setEditingReportCategory(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingReportCategory({
+                                    id: 2,
+                                    name: "Security",
+                                    status: "ACTIVE",
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Report Category</DialogTitle>
+                                <DialogDescription>Update category details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-category-name">Category Name</Label>
+                                  <Input id="edit-category-name" defaultValue={editingReportCategory?.name} />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-category-status">Status</Label>
+                                  <Select defaultValue={editingReportCategory?.status}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="ACTIVE">Active</SelectItem>
+                                      <SelectItem value="INACTIVE">Inactive</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingReportCategory(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Category
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -1318,55 +2274,150 @@ export default function BuildingManagerDashboard() {
           </TabsContent>
 
           {/* Community Wall Tab */}
-          <TabsContent value="community-wall" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-teal font-serif">Community Wall Management</h2>
-                <p className="text-teal/60">Manage community posts and announcements</p>
-              </div>
-              <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Post
-              </Button>
-            </div>
-
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6">
+          <TabsContent value="community" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Community Wall Management</CardTitle>
+                    <CardDescription>Manage community posts and announcements</CardDescription>
+                  </div>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-teal hover:bg-teal/90">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Post
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Community Post</DialogTitle>
+                        <DialogDescription>Create a new community post</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="post-name">Post Title</Label>
+                          <Input id="post-name" placeholder="Community Event" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="post-type">Post Type</Label>
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ANNOUNCEMENT">Announcement</SelectItem>
+                              <SelectItem value="EVENT">Event</SelectItem>
+                              <SelectItem value="NEWS_LETTER">Newsletter</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="post-description">Description</Label>
+                          <Textarea id="post-description" placeholder="Enter post description" />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-teal hover:bg-teal/90">
+                          Add Post
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Title</TableHead>
                       <TableHead>Type</TableHead>
-                      <TableHead>Description</TableHead>
-                      <TableHead>Author</TableHead>
+                      <TableHead>Posted By</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {communityPosts.map((post) => (
-                      <TableRow key={post.id}>
-                        <TableCell className="font-medium">{post.title}</TableCell>
-                        <TableCell>{post.type}</TableCell>
-                        <TableCell className="max-w-xs truncate">{post.description}</TableCell>
-                        <TableCell>{post.author}</TableCell>
-                        <TableCell>{post.date}</TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(post.status)}>{post.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="ghost" onClick={() => setEditingCommunityPost(post)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="ghost">
-                              <Trash2 className="h-4 w-4 text-coral" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableRow>
+                      <TableCell className="font-medium">Community BBQ Event</TableCell>
+                      <TableCell>
+                        <Badge className="bg-blue-500">Event</Badge>
+                      </TableCell>
+                      <TableCell>Building Manager</TableCell>
+                      <TableCell>2025-01-28</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-500">Active</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Dialog
+                            open={editingCommunityPost !== null}
+                            onOpenChange={(open) => !open && setEditingCommunityPost(null)}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() =>
+                                  setEditingCommunityPost({
+                                    id: 1,
+                                    name: "Community BBQ Event",
+                                    type: "EVENT",
+                                    description: "Join us for a community BBQ event this weekend!",
+                                  })
+                                }
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Edit Community Post</DialogTitle>
+                                <DialogDescription>Update post details</DialogDescription>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-post-name">Post Title</Label>
+                                  <Input id="edit-post-name" defaultValue={editingCommunityPost?.name} />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-post-type">Post Type</Label>
+                                  <Select defaultValue={editingCommunityPost?.type}>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="ANNOUNCEMENT">Announcement</SelectItem>
+                                      <SelectItem value="EVENT">Event</SelectItem>
+                                      <SelectItem value="NEWS_LETTER">Newsletter</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="edit-post-description">Description</Label>
+                                  <Textarea
+                                    id="edit-post-description"
+                                    defaultValue={editingCommunityPost?.description}
+                                  />
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setEditingCommunityPost(null)}>
+                                  Cancel
+                                </Button>
+                                <Button type="submit" className="bg-teal hover:bg-teal/90">
+                                  Update Post
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                          <Button size="icon" variant="ghost">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
@@ -1375,509 +2426,92 @@ export default function BuildingManagerDashboard() {
 
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-teal font-serif mb-2">Settings</h2>
-              <p className="text-teal/60">Manage your account and preferences</p>
-            </div>
-
-            <div className="grid gap-6">
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-teal font-serif">Profile Information</CardTitle>
-                  <CardDescription>Update your personal information</CardDescription>
+                  <CardTitle>Profile Settings</CardTitle>
+                  <CardDescription>Manage your account information</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input id="name" defaultValue="Building Manager" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" defaultValue="manager@mahaone.com" />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="profile-name">Full Name</Label>
+                    <Input id="profile-name" defaultValue="Building Manager" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" defaultValue="+971 50 123 4567" />
+                    <Label htmlFor="profile-email">Email</Label>
+                    <Input id="profile-email" type="email" defaultValue="manager@mahaone.com" />
                   </div>
-                  <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Save Changes</Button>
+                  <div className="space-y-2">
+                    <Label htmlFor="profile-phone">Phone</Label>
+                    <Input id="profile-phone" defaultValue="+971 50 123 4567" />
+                  </div>
+                  <Button className="bg-teal hover:bg-teal/90">Update Profile</Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-teal font-serif">Password & Security</CardTitle>
-                  <CardDescription>Manage your password and security settings</CardDescription>
+                  <CardTitle>Change Password</CardTitle>
+                  <CardDescription>Update your password</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start bg-transparent"
-                    onClick={() => setShowPasswordDialog(true)}
-                  >
-                    <Lock className="h-4 w-4 mr-2" />
-                    Change Password
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start bg-transparent"
-                    onClick={() => setShowResetPasswordDialog(true)}
-                  >
+                  <div className="space-y-2">
+                    <Label htmlFor="current-password">Current Password</Label>
+                    <Input id="current-password" type="password" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="new-password">New Password</Label>
+                    <Input id="new-password" type="password" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirm-password">Confirm New Password</Label>
+                    <Input id="confirm-password" type="password" />
+                  </div>
+                  <Button className="bg-teal hover:bg-teal/90">Change Password</Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Reset Password</CardTitle>
+                  <CardDescription>Request a password reset link</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-gray-600">
+                    Click the button below to receive a password reset link via email.
+                  </p>
+                  <Button variant="outline" className="w-full bg-transparent">
                     <Mail className="h-4 w-4 mr-2" />
-                    Reset Password via Email
+                    Send Reset Link
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-teal font-serif">Notification Preferences</CardTitle>
-                  <CardDescription>Choose what notifications you want to receive</CardDescription>
+                  <CardTitle>Notification Preferences</CardTitle>
+                  <CardDescription>Manage your notification settings</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-teal">Email Notifications</p>
-                      <p className="text-sm text-teal/60">Receive email updates</p>
-                    </div>
-                    <Switch defaultChecked />
+                    <Label htmlFor="email-notifications">Email Notifications</Label>
+                    <input type="checkbox" id="email-notifications" className="rounded" defaultChecked />
                   </div>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-teal">SMS Notifications</p>
-                      <p className="text-sm text-teal/60">Receive SMS alerts</p>
-                    </div>
-                    <Switch />
+                    <Label htmlFor="sms-notifications">SMS Notifications</Label>
+                    <input type="checkbox" id="sms-notifications" className="rounded" />
                   </div>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-teal">Push Notifications</p>
-                      <p className="text-sm text-teal/60">Receive push notifications</p>
-                    </div>
-                    <Switch defaultChecked />
+                    <Label htmlFor="push-notifications">Push Notifications</Label>
+                    <input type="checkbox" id="push-notifications" className="rounded" defaultChecked />
                   </div>
+                  <Button className="bg-teal hover:bg-teal/90">Save Preferences</Button>
                 </CardContent>
               </Card>
             </div>
           </TabsContent>
         </Tabs>
       </div>
-
-      {/* Property Edit Dialog */}
-      <Dialog open={!!editingProperty} onOpenChange={() => setEditingProperty(null)}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Edit Property</DialogTitle>
-          </DialogHeader>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Name (English)</Label>
-              <Input defaultValue={editingProperty?.nameEn} />
-            </div>
-            <div className="space-y-2">
-              <Label>Name (Arabic)</Label>
-              <Input defaultValue={editingProperty?.nameAr} />
-            </div>
-            <div className="space-y-2">
-              <Label>Location</Label>
-              <Input defaultValue={editingProperty?.location} />
-            </div>
-            <div className="space-y-2">
-              <Label>Area</Label>
-              <Input defaultValue={editingProperty?.area} />
-            </div>
-            <div className="space-y-2">
-              <Label>Bedrooms</Label>
-              <Input type="number" defaultValue={editingProperty?.bedrooms} />
-            </div>
-            <div className="space-y-2">
-              <Label>Floor</Label>
-              <Input type="number" defaultValue={editingProperty?.floor} />
-            </div>
-            <div className="space-y-2 col-span-2">
-              <Label>Type</Label>
-              <Select defaultValue={editingProperty?.type}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Apartment">Apartment</SelectItem>
-                  <SelectItem value="Villa">Villa</SelectItem>
-                  <SelectItem value="Townhouse">Townhouse</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingProperty(null)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Update Property</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Visit Purpose Edit Dialog */}
-      <Dialog open={!!editingVisitPurpose} onOpenChange={() => setEditingVisitPurpose(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Visit Purpose</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Name (English)</Label>
-              <Input defaultValue={editingVisitPurpose?.nameEn} />
-            </div>
-            <div className="space-y-2">
-              <Label>Name (Arabic)</Label>
-              <Input defaultValue={editingVisitPurpose?.nameAr} />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch defaultChecked={editingVisitPurpose?.autoApprove} />
-              <Label>Auto Approve</Label>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingVisitPurpose(null)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Amenity Edit Dialog */}
-      <Dialog open={!!editingAmenity} onOpenChange={() => setEditingAmenity(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Amenity</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Property</Label>
-              <Select defaultValue={editingAmenity?.property}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Tower A">Tower A</SelectItem>
-                  <SelectItem value="Villa B">Villa B</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Name</Label>
-              <Input defaultValue={editingAmenity?.name} />
-            </div>
-            <div className="space-y-2">
-              <Label>Description</Label>
-              <Textarea defaultValue={editingAmenity?.description} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Capacity</Label>
-                <Input type="number" defaultValue={editingAmenity?.capacity} />
-              </div>
-              <div className="space-y-2">
-                <Label>Price</Label>
-                <Input defaultValue={editingAmenity?.price} />
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingAmenity(null)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Home Service Edit Dialog */}
-      <Dialog open={!!editingHomeService} onOpenChange={() => setEditingHomeService(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Home Service</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Property</Label>
-              <Select defaultValue={editingHomeService?.property}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Tower A">Tower A</SelectItem>
-                  <SelectItem value="Villa B">Villa B</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Title</Label>
-              <Input defaultValue={editingHomeService?.title} />
-            </div>
-            <div className="space-y-2">
-              <Label>Name</Label>
-              <Input defaultValue={editingHomeService?.name} />
-            </div>
-            <div className="space-y-2">
-              <Label>Base Price</Label>
-              <Input defaultValue={editingHomeService?.basePrice} />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingHomeService(null)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Service Product Edit Dialog */}
-      <Dialog open={!!editingServiceProduct} onOpenChange={() => setEditingServiceProduct(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Service Product</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Service</Label>
-              <Select defaultValue={editingServiceProduct?.service}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="AC Maintenance">AC Maintenance</SelectItem>
-                  <SelectItem value="Plumbing">Plumbing</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Name (English)</Label>
-              <Input defaultValue={editingServiceProduct?.nameEn} />
-            </div>
-            <div className="space-y-2">
-              <Label>Name (Arabic)</Label>
-              <Input defaultValue={editingServiceProduct?.nameAr} />
-            </div>
-            <div className="space-y-2">
-              <Label>Price</Label>
-              <Input defaultValue={editingServiceProduct?.price} />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingServiceProduct(null)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Service Provider Edit Dialog */}
-      <Dialog open={!!editingServiceProvider} onOpenChange={() => setEditingServiceProvider(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Service Provider</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Service Type</Label>
-              <Select defaultValue={editingServiceProvider?.serviceType}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="AC Maintenance">AC Maintenance</SelectItem>
-                  <SelectItem value="Plumbing">Plumbing</SelectItem>
-                  <SelectItem value="Electrical">Electrical</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Name (English)</Label>
-                <Input defaultValue={editingServiceProvider?.nameEn} />
-              </div>
-              <div className="space-y-2">
-                <Label>Name (Arabic)</Label>
-                <Input defaultValue={editingServiceProvider?.nameAr} />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Email</Label>
-              <Input type="email" defaultValue={editingServiceProvider?.email} />
-            </div>
-            <div className="space-y-2">
-              <Label>Phone</Label>
-              <Input defaultValue={editingServiceProvider?.phone} />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingServiceProvider(null)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Report Priority Edit Dialog */}
-      <Dialog open={!!editingReportPriority} onOpenChange={() => setEditingReportPriority(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Report Priority</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Priority Name</Label>
-              <Input defaultValue={editingReportPriority?.name} />
-            </div>
-            <div className="space-y-2">
-              <Label>Status</Label>
-              <Select defaultValue={editingReportPriority?.status}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingReportPriority(null)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Report Category Edit Dialog */}
-      <Dialog open={!!editingReportCategory} onOpenChange={() => setEditingReportCategory(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Report Category</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Category Name</Label>
-              <Input defaultValue={editingReportCategory?.name} />
-            </div>
-            <div className="space-y-2">
-              <Label>Status</Label>
-              <Select defaultValue={editingReportCategory?.status}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingReportCategory(null)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Community Post Edit Dialog */}
-      <Dialog open={!!editingCommunityPost} onOpenChange={() => setEditingCommunityPost(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Community Post</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Title</Label>
-              <Input defaultValue={editingCommunityPost?.title} />
-            </div>
-            <div className="space-y-2">
-              <Label>Type</Label>
-              <Select defaultValue={editingCommunityPost?.type}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Event">Event</SelectItem>
-                  <SelectItem value="Announcement">Announcement</SelectItem>
-                  <SelectItem value="News">News</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Description</Label>
-              <Textarea defaultValue={editingCommunityPost?.description} rows={4} />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingCommunityPost(null)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Change Password Dialog */}
-      <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Change Password</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Current Password</Label>
-              <Input type="password" />
-            </div>
-            <div className="space-y-2">
-              <Label>New Password</Label>
-              <Input type="password" />
-            </div>
-            <div className="space-y-2">
-              <Label>Confirm New Password</Label>
-              <Input type="password" />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowPasswordDialog(false)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Change Password</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Reset Password Dialog */}
-      <Dialog open={showResetPasswordDialog} onOpenChange={setShowResetPasswordDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Reset Password</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-sm text-teal/70">A password reset link will be sent to your registered email address.</p>
-            <div className="space-y-2">
-              <Label>Email Address</Label>
-              <Input type="email" defaultValue="manager@mahaone.com" disabled />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowResetPasswordDialog(false)}>
-              Cancel
-            </Button>
-            <Button className="bg-gradient-to-r from-teal to-teal-dark text-white">Send Reset Link</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
