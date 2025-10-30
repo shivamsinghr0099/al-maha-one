@@ -1,5 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+const BASEURL=process.env.NEXT_PUBLIC_API_URL
+
 export interface Name {
   en: string;
   ar?: string;
@@ -53,10 +55,10 @@ export interface ApiResponse<T> {
 export const listLandlords = createAsyncThunk<LandlordListResponse,{ limit?: number; offset?: number }, { rejectValue: string }>
 ('landlord/list', async (params, { rejectWithValue }) => {
   try {
-    const response = await fetch('/buildingManager/landlord/list', {
+    const response = await fetch(`${BASEURL}/buildingManager/landlord/list`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(params),
+      body: JSON.stringify(params), 
     });
     const json: ApiResponse<LandlordListResponse> = await response.json();
     if (!json.success || !json.data) return rejectWithValue(json.message || 'Failed to fetch landlords');
@@ -79,7 +81,7 @@ export const addLandlord = createAsyncThunk<LandlordResponse,
   { rejectValue: string }
 >('landlord/add', async (data, { rejectWithValue }) => {
   try {
-    const response = await fetch('/buildingManager/landlord/add', {
+    const response = await fetch(`${BASEURL}/buildingManager/landlord/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -109,7 +111,7 @@ export const editLandlord = createAsyncThunk<
 >('landlord/edit', async (data, { rejectWithValue }) => {
   try {
     const { landlordId, ...payload } = data;
-    const response = await fetch('/buildingManager/landlord/edit', {
+    const response = await fetch(`${BASEURL}/buildingManager/landlord/edit`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ landlordId, ...payload }),
@@ -129,7 +131,7 @@ export const removeLandlord = createAsyncThunk<
   { rejectValue: string }
 >('landlord/remove', async ({ landlordId }, { rejectWithValue }) => {
   try {
-    const response = await fetch('/buildingManager/landlord/remove', {
+    const response = await fetch(`${BASEURL}/buildingManager/landlord/remove`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ landlordId }),
@@ -149,7 +151,7 @@ export const connectPropertyToLandlord = createAsyncThunk<
   { rejectValue: string }
 >('landlord/connectProperty', async ({ userId, propertyId }, { rejectWithValue }) => {
   try {
-    const response = await fetch('/buildingManager/landlord/property/connect', {
+    const response = await fetch(`${BASEURL}/buildingManager/landlord/property/connect`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId, propertyId }),
