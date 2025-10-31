@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Eye, EyeOff } from "lucide-react"
-import { MahaLogo } from "@/components/maha-logo"
+import { Eye, EyeOff, Copy, Check, MapPin, Shield, Building2, User } from "lucide-react"
 import { LoadingScreen } from "@/components/loading-screen"
 import { OnboardingFlow } from "@/components/onboarding"
 import { DarkModeToggle } from "@/components/dark-mode-toggle"
@@ -20,9 +19,12 @@ const userTypes = [
     titleAr: "مستأجر",
     description: "Access your rental services and property management tools",
     descriptionAr: "الوصول إلى خدمات الإيجار وأدوات إدارة الممتلكات",
-    color: "from-primary to-primary-600",
-    bgColor: "bg-primary/10",
+    color: "from-[#1C3F3A] to-[#2E7D8F]",
+    bgColor: "bg-[#1C3F3A]/10",
     route: "/tenant/dashboard",
+    icon: User,
+    username: "tenant@mahaone.ae",
+    password: "tenant123",
   },
   {
     type: "landlord",
@@ -30,9 +32,12 @@ const userTypes = [
     titleAr: "مالك العقار",
     description: "Manage your properties and tenant relationships",
     descriptionAr: "إدارة ممتلكاتك وعلاقات المستأجرين",
-    color: "from-secondary to-secondary-600",
-    bgColor: "bg-secondary/10",
+    color: "from-[#D4A85F] to-[#F4A261]",
+    bgColor: "bg-[#D4A85F]/10",
     route: "/landlord/dashboard",
+    icon: Building2,
+    username: "landlord@mahaone.ae",
+    password: "landlord123",
   },
   {
     type: "building-manager",
@@ -40,9 +45,12 @@ const userTypes = [
     titleAr: "مدير المبنى",
     description: "Oversee building operations and tenant services",
     descriptionAr: "الإشراف على عمليات المبنى وخدمات المستأجرين",
-    color: "from-neutral to-neutral-600",
-    bgColor: "bg-neutral/10",
+    color: "from-[#C2C5AA] to-[#D4A85F]",
+    bgColor: "bg-[#C2C5AA]/10",
     route: "/building-manager/dashboard",
+    icon: Building2,
+    username: "manager@mahaone.ae",
+    password: "manager123",
   },
   {
     type: "super-admin",
@@ -50,9 +58,12 @@ const userTypes = [
     titleAr: "المدير العام",
     description: "Complete system administration and oversight",
     descriptionAr: "إدارة النظام الكاملة والإشراف",
-    color: "from-accent to-accent-600",
-    bgColor: "bg-accent/10",
+    color: "from-[#E56A5D] to-[#E76F51]",
+    bgColor: "bg-[#E56A5D]/10",
     route: "/super-admin/dashboard",
+    icon: Shield,
+    username: "admin@mahaone.ae",
+    password: "admin123",
   },
 ]
 
@@ -66,13 +77,12 @@ export default function LoginPage() {
     username: "",
     password: "",
   })
+  const [copiedField, setCopiedField] = useState<string | null>(null)
 
-  // Simulate initial loading (1 second as per guidelines)
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false)
       try {
-        // Check if user is first time visitor
         const hasVisited = localStorage.getItem("maha-has-visited")
         if (!hasVisited) {
           setShowOnboarding(true)
@@ -94,311 +104,252 @@ export default function LoginPage() {
       return
     }
 
-    // Show loading for login process
     setIsLoading(true)
 
-    // Dummy credentials for testing
-    const dummyCredentials = {
-      tenant: { username: "tenant", password: "tenant123" },
-      landlord: { username: "landlord", password: "landlord123" },
-      "building-manager": { username: "manager", password: "manager123" },
-      "super-admin": { username: "admin", password: "admin123" },
-    }
-
     setTimeout(() => {
-      const validCredentials = dummyCredentials[selectedUserType as keyof typeof dummyCredentials]
-
-      if (
-        validCredentials &&
-        credentials.username === validCredentials.username &&
-        credentials.password === validCredentials.password
-      ) {
-        const userType = userTypes.find((type) => type.type === selectedUserType)
-        if (userType) {
-          try {
-            // Store user info in localStorage for the session
-            localStorage.setItem("userType", selectedUserType)
-            localStorage.setItem("username", credentials.username)
-            window.location.href = userType.route
-          } catch (error) {
-            console.error("Failed to save user data:", error)
-            setIsLoading(false)
-          }
-        }
-      } else {
-        setIsLoading(false)
-        alert(isArabic ? "بيانات الدخول غير صحيحة" : "Invalid credentials. Please try again.")
+      const selectedUser = userTypes.find((u) => u.type === selectedUserType)
+      if (selectedUser) {
+        window.location.href = selectedUser.route
       }
-    }, 800) // Simulate network delay
+    }, 1000)
   }
 
-  const handleOnboardingComplete = (userType: string) => {
-    setShowOnboarding(false)
-    setSelectedUserType(userType)
+  const copyToClipboard = (text: string, field: string) => {
+    navigator.clipboard.writeText(text)
+    setCopiedField(field)
+    setTimeout(() => setCopiedField(null), 2000)
+  }
+
+  const handleUserTypeSelect = (type: string) => {
+    setSelectedUserType(type)
+    const selectedUser = userTypes.find((u) => u.type === type)
+    if (selectedUser) {
+      setCredentials({
+        username: selectedUser.username,
+        password: selectedUser.password,
+      })
+    }
   }
 
   if (isLoading) {
-    return <LoadingScreen message="Welcome to MahaOne" duration={1000} />
+    return <LoadingScreen />
   }
 
   if (showOnboarding) {
-    return <OnboardingFlow onComplete={handleOnboardingComplete} />
+    return <OnboardingFlow onComplete={() => setShowOnboarding(false)} />
   }
 
+  const selectedUser = userTypes.find((u) => u.type === selectedUserType)
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-brand-pattern opacity-20"></div>
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5"></div>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#F8F6F3] via-white to-[#F8F6F3]">
+      <div className="absolute inset-0 desert-pattern opacity-30" />
 
-      {/* Top Navigation */}
-      <div className="absolute top-4 right-4 z-50 flex items-center space-x-2">
-        <DarkModeToggle />
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsArabic(!isArabic)}
-          className="bg-white/90 backdrop-blur-sm border-primary/30 text-neutral hover:bg-primary/10 font-medium"
-        >
-          {isArabic ? "English" : "عربي"}
-        </Button>
-      </div>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-[#1C3F3A]/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#D4A85F]/5 rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#E56A5D]/3 rounded-full blur-3xl" />
 
-      <div className="relative min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-6xl">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center mb-8">
-              <MahaLogo size="2xl" variant="primary" showText={true} animated={false} />
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-neutral mb-4 font-serif">
-              {isArabic ? "مرحباً بك في ماها ون" : "Welcome to MahaOne"}
-            </h1>
-            <p className="text-xl md:text-2xl text-neutral/80 max-w-3xl mx-auto font-medium">
-              {isArabic
-                ? "منصة إدارة الممتلكات الذكية - اختر نوع حسابك للمتابعة"
-                : "Smart Property Management Platform - Select your account type to continue"}
-            </p>
-            <div className="mt-6 flex items-center justify-center space-x-2 text-sm text-neutral/60">
-              <span>⚡</span>
-              <span>{isArabic ? "سريع • بسيط • متصل" : "Fast • Simple • Connected"}</span>
-              <span>⚡</span>
-            </div>
+      <div className="relative z-10 flex items-center justify-between p-6 border-b border-[#1C3F3A]/10 bg-white/50 backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1C3F3A] to-[#D4A85F] flex items-center justify-center shadow-lg">
+            <MapPin className="w-6 h-6 text-white" />
           </div>
-
-          {!selectedUserType ? (
-            /* User Type Selection */
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {userTypes.map((userType) => (
-                <Card
-                  key={userType.type}
-                  className={`border-0 shadow-brand-lg hover:shadow-brand transition-all duration-500 cursor-pointer transform hover:scale-105 ${
-                    userType.bgColor
-                  } backdrop-blur-sm overflow-hidden relative group`}
-                  onClick={() => setSelectedUserType(userType.type)}
-                  style={{
-                    // Ensure touch targets are optimized
-                    minHeight: "200px",
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-white/30 group-hover:from-white/70 group-hover:to-white/40 transition-all duration-500"></div>
-
-                  <CardHeader className="relative text-center pb-4 pt-8">
-                    <div
-                      className={`w-20 h-20 bg-gradient-to-br ${userType.color} rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-brand-lg group-hover:shadow-brand transition-all duration-500 transform group-hover:scale-110`}
-                    >
-                      <span className="text-3xl">
-                        {userType.type === "tenant"
-                          ? "🏠"
-                          : userType.type === "landlord"
-                            ? "🏢"
-                            : userType.type === "building-manager"
-                              ? "⚙️"
-                              : "🛡️"}
-                      </span>
-                    </div>
-                    <CardTitle className="text-xl font-bold text-neutral font-serif">
-                      {isArabic ? userType.titleAr : userType.title}
-                    </CardTitle>
-                  </CardHeader>
-
-                  <CardContent className="relative pb-8">
-                    <p className="text-sm text-neutral/70 text-center leading-relaxed px-2">
-                      {isArabic ? userType.descriptionAr : userType.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            /* Login Form */
-            <div className="max-w-md mx-auto">
-              <Card className="border-0 shadow-brand-lg bg-white/95 backdrop-blur-md">
-                <CardHeader className="text-center pb-6">
-                  <div className="flex items-center justify-center mb-6">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSelectedUserType(null)}
-                      className="absolute left-4 top-4 text-neutral/70 hover:text-neutral"
-                    >
-                      ←
-                    </Button>
-                    <div
-                      className={`w-20 h-20 bg-gradient-to-br ${
-                        userTypes.find((t) => t.type === selectedUserType)?.color
-                      } rounded-3xl flex items-center justify-center shadow-brand-lg`}
-                    >
-                      <span className="text-3xl">
-                        {selectedUserType === "tenant"
-                          ? "🏠"
-                          : selectedUserType === "landlord"
-                            ? "🏢"
-                            : selectedUserType === "building-manager"
-                              ? "⚙️"
-                              : "🛡️"}
-                      </span>
-                    </div>
-                  </div>
-                  <CardTitle className="text-2xl font-bold text-neutral font-serif">
-                    {isArabic ? "تسجيل الدخول" : "Sign In"}
-                  </CardTitle>
-                  <p className="text-neutral/70 font-medium">
-                    {isArabic
-                      ? `تسجيل الدخول كـ ${userTypes.find((t) => t.type === selectedUserType)?.titleAr}`
-                      : `Sign in as ${userTypes.find((t) => t.type === selectedUserType)?.title}`}
-                  </p>
-                </CardHeader>
-
-                <CardContent>
-                  <form onSubmit={handleLogin} className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="username" className="text-neutral font-semibold">
-                        {isArabic ? "اسم المستخدم" : "Username"}
-                      </Label>
-                      <Input
-                        id="username"
-                        type="text"
-                        value={credentials.username}
-                        onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                        placeholder={isArabic ? "أدخل اسم المستخدم" : "Enter your username"}
-                        className="border-neutral/30 focus:border-primary focus:ring-primary/20 rounded-xl h-12 text-base"
-                        required
-                        style={{ minHeight: "48px" }} // Touch target optimization
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="password" className="text-neutral font-semibold">
-                        {isArabic ? "كلمة المرور" : "Password"}
-                      </Label>
-                      <div className="relative">
-                        <Input
-                          id="password"
-                          type={showPassword ? "text" : "password"}
-                          value={credentials.password}
-                          onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                          placeholder={isArabic ? "أدخل كلمة المرور" : "Enter your password"}
-                          className="border-neutral/30 focus:border-primary focus:ring-primary/20 rounded-xl h-12 text-base pr-12"
-                          required
-                          style={{ minHeight: "48px" }}
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-neutral/50 hover:text-neutral"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className={`w-full h-14 bg-gradient-to-r ${
-                        userTypes.find((t) => t.type === selectedUserType)?.color
-                      } hover:shadow-brand-lg text-white font-bold text-lg shadow-brand transition-all duration-500 rounded-xl`}
-                      style={{ minHeight: "56px" }} // Touch target optimization
-                    >
-                      {isArabic ? "تسجيل الدخول" : "Sign In"}
-                    </Button>
-
-                    <div className="text-center">
-                      <Button variant="link" className="text-neutral/70 hover:text-primary text-sm font-medium">
-                        {isArabic ? "نسيت كلمة المرور؟" : "Forgot Password?"}
-                      </Button>
-                    </div>
-                  </form>
-
-                  {/* Demo Credentials */}
-                  <div className="mt-6 p-4 bg-primary/5 rounded-xl border border-primary/20">
-                    <h4 className="font-bold text-neutral mb-2 text-sm">
-                      {isArabic ? "بيانات تجريبية للاختبار:" : "Demo Credentials for Testing:"}
-                    </h4>
-                    <div className="text-xs text-neutral/70 space-y-1 font-mono">
-                      {selectedUserType === "tenant" && (
-                        <>
-                          <p>
-                            <strong>Username:</strong> tenant
-                          </p>
-                          <p>
-                            <strong>Password:</strong> tenant123
-                          </p>
-                        </>
-                      )}
-                      {selectedUserType === "landlord" && (
-                        <>
-                          <p>
-                            <strong>Username:</strong> landlord
-                          </p>
-                          <p>
-                            <strong>Password:</strong> landlord123
-                          </p>
-                        </>
-                      )}
-                      {selectedUserType === "building-manager" && (
-                        <>
-                          <p>
-                            <strong>Username:</strong> manager
-                          </p>
-                          <p>
-                            <strong>Password:</strong> manager123
-                          </p>
-                        </>
-                      )}
-                      {selectedUserType === "super-admin" && (
-                        <>
-                          <p>
-                            <strong>Username:</strong> admin
-                          </p>
-                          <p>
-                            <strong>Password:</strong> admin123
-                          </p>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {/* Footer */}
-          <div className="text-center mt-12">
-            <p className="text-neutral/60 text-sm font-medium">
-              {isArabic
-                ? "© 2024 شركة المها القابضة ذ.م.م - جميع الحقوق محفوظة"
-                : "© 2024 Al Maha Holdings LLC - All rights reserved"}
-            </p>
-            <div className="mt-2 flex items-center justify-center space-x-4 text-xs text-neutral/50">
-              <span>⚡ Load time: &lt;1.5s</span>
-              <span>📱 Touch optimized</span>
-              <span>🌙 Dark mode ready</span>
-            </div>
+          <div>
+            <h1 className="text-xl font-bold font-serif text-[#1C3F3A]">MahaOne</h1>
+            <p className="text-xs text-[#C2C5AA]">Property. Simplified. Connected.</p>
           </div>
         </div>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsArabic(!isArabic)}
+            className="text-[#1C3F3A] hover:bg-[#1C3F3A]/10"
+          >
+            {isArabic ? "English" : "العربية"}
+          </Button>
+          <DarkModeToggle />
+        </div>
+      </div>
+
+      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-88px)] p-6">
+        <Card className="w-full max-w-5xl shadow-2xl border-[#1C3F3A]/10 bg-white/80 backdrop-blur-sm">
+          <CardHeader className="text-center space-y-2 pb-8">
+            <CardTitle className="text-3xl font-bold font-serif text-[#1C3F3A]">
+              {isArabic ? "مرحباً بك في MahaOne" : "Welcome to MahaOne"}
+            </CardTitle>
+            <p className="text-[#C2C5AA] text-lg">
+              {isArabic ? "إدارة الممتلكات الذكية للحياة العصرية" : "Smart Property Management for Modern Living"}
+            </p>
+          </CardHeader>
+
+          <CardContent className="space-y-8">
+            <div className="space-y-4">
+              <Label className="text-base font-semibold text-[#1C3F3A]">
+                {isArabic ? "اختر نوع المستخدم" : "Select User Type"}
+              </Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {userTypes.map((userType) => {
+                  const Icon = userType.icon
+                  return (
+                    <button
+                      key={userType.type}
+                      onClick={() => handleUserTypeSelect(userType.type)}
+                      className={`group relative p-6 rounded-xl border-2 transition-all duration-300 text-left ${
+                        selectedUserType === userType.type
+                          ? "border-[#1C3F3A] bg-gradient-to-br " + userType.color + " shadow-lg scale-105"
+                          : "border-[#C2C5AA]/30 bg-white hover:border-[#D4A85F] hover:shadow-md"
+                      }`}
+                    >
+                      <div
+                        className={`mb-4 w-12 h-12 rounded-lg flex items-center justify-center ${
+                          selectedUserType === userType.type ? "bg-white/20" : userType.bgColor
+                        }`}
+                      >
+                        <Icon
+                          className={`w-6 h-6 ${selectedUserType === userType.type ? "text-white" : "text-[#1C3F3A]"}`}
+                        />
+                      </div>
+                      <h3
+                        className={`font-semibold mb-2 ${
+                          selectedUserType === userType.type ? "text-white" : "text-[#1C3F3A]"
+                        }`}
+                      >
+                        {isArabic ? userType.titleAr : userType.title}
+                      </h3>
+                      <p
+                        className={`text-sm ${selectedUserType === userType.type ? "text-white/90" : "text-[#C2C5AA]"}`}
+                      >
+                        {isArabic ? userType.descriptionAr : userType.description}
+                      </p>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {selectedUser && (
+              <div className="p-6 rounded-xl bg-gradient-to-br from-[#1C3F3A]/5 to-[#D4A85F]/5 border-2 border-[#D4A85F]/30 space-y-4 animate-fade-in">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1C3F3A] to-[#D4A85F] flex items-center justify-center">
+                    <Shield className="w-4 h-4 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-[#1C3F3A]">
+                    {isArabic ? "بيانات الدخول التجريبية" : "Demo Credentials"}
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm text-[#C2C5AA]">{isArabic ? "اسم المستخدم" : "Username"}</Label>
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-white border border-[#D4A85F]/30">
+                      <code className="flex-1 text-sm font-mono text-[#1C3F3A] font-semibold">
+                        {selectedUser.username}
+                      </code>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => copyToClipboard(selectedUser.username, "username")}
+                        className="h-8 w-8 p-0 hover:bg-[#D4A85F]/10"
+                      >
+                        {copiedField === "username" ? (
+                          <Check className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-[#1C3F3A]" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm text-[#C2C5AA]">{isArabic ? "كلمة المرور" : "Password"}</Label>
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-white border border-[#D4A85F]/30">
+                      <code className="flex-1 text-sm font-mono text-[#1C3F3A] font-semibold">
+                        {selectedUser.password}
+                      </code>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => copyToClipboard(selectedUser.password, "password")}
+                        className="h-8 w-8 p-0 hover:bg-[#D4A85F]/10"
+                      >
+                        {copiedField === "password" ? (
+                          <Check className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-[#1C3F3A]" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-xs text-[#C2C5AA] text-center mt-4">
+                  {isArabic
+                    ? "انقر على أيقونة النسخ لنسخ بيانات الاعتماد بسهولة"
+                    : "Click the copy icon to easily copy credentials"}
+                </p>
+              </div>
+            )}
+
+            {selectedUserType && (
+              <form onSubmit={handleLogin} className="space-y-6 animate-fade-in">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="username" className="text-[#1C3F3A]">
+                      {isArabic ? "اسم المستخدم" : "Username"}
+                    </Label>
+                    <Input
+                      id="username"
+                      type="text"
+                      value={credentials.username}
+                      onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                      placeholder={isArabic ? "أدخل اسم المستخدم" : "Enter username"}
+                      className="h-12 border-[#C2C5AA]/30 focus:border-[#1C3F3A] focus:ring-[#1C3F3A]"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-[#1C3F3A]">
+                      {isArabic ? "كلمة المرور" : "Password"}
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        value={credentials.password}
+                        onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                        placeholder={isArabic ? "أدخل كلمة المرور" : "Enter password"}
+                        className="h-12 pr-12 border-[#C2C5AA]/30 focus:border-[#1C3F3A] focus:ring-[#1C3F3A]"
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-[#1C3F3A]/10"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-4 h-4 text-[#C2C5AA]" />
+                        ) : (
+                          <Eye className="w-4 h-4 text-[#C2C5AA]" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full h-12 text-base font-semibold bg-gradient-to-r from-[#1C3F3A] to-[#2E7D8F] hover:from-[#2E7D8F] hover:to-[#1C3F3A] text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  {isArabic ? "تسجيل الدخول" : "Sign In"}
+                </Button>
+              </form>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
