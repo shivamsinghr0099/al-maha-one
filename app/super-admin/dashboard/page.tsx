@@ -10,6 +10,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Progress } from "@/components/ui/progress"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Building,
   Users,
@@ -37,8 +40,11 @@ import {
   BarChart3,
   Truck,
   HelpCircle,
-  CableCarIcon as Elevator,
+  Calculator as Elevator,
   UserPlus,
+  Edit,
+  Trash2,
+  Plus,
 } from "lucide-react"
 import { MahaLogo } from "@/components/maha-logo"
 
@@ -353,9 +359,87 @@ export default function SuperAdminDashboard() {
   const [showAddPropertyModal, setShowAddPropertyModal] = useState(false)
   const [selectedServiceCategory, setSelectedServiceCategory] = useState("all")
 
+  const [languages, setLanguages] = useState([
+    { id: "1", name: "English", code: "en", status: "ACTIVE" },
+    { id: "2", name: "Arabic", code: "ar", status: "ACTIVE" },
+  ])
+  const [currencies, setCurrencies] = useState([
+    { id: "1", name: "US Dollar", code: "USD", symbol: "$", status: "ACTIVE" },
+    { id: "2", name: "UAE Dirham", code: "AED", symbol: "د.إ", status: "ACTIVE" },
+  ])
+  const [timezones, setTimezones] = useState([
+    {
+      id: "1",
+      name: "Asia/Dubai",
+      code: "AE",
+      regionName: "Dubai",
+      offsetHours: 4,
+      offsetMinutes: 0,
+      offsetString: "GMT+04:00",
+      description: "UAE Standard Time",
+      status: "ACTIVE",
+    },
+    {
+      id: "2",
+      name: "Asia/Kolkata",
+      code: "IN",
+      regionName: "India",
+      offsetHours: 5,
+      offsetMinutes: 30,
+      offsetString: "GMT+05:30",
+      description: "Indian Standard Time",
+      status: "ACTIVE",
+    },
+  ])
+  const [roles, setRoles] = useState([
+    { id: "1", name: "Super Admin", code: "SUPER_ADMIN", status: "ACTIVE" },
+    { id: "2", name: "Building Manager", code: "BUILDING_MANAGER", status: "ACTIVE" },
+    { id: "3", name: "Landlord", code: "LANDLORD", status: "ACTIVE" },
+    { id: "4", name: "Tenant", code: "TENANT", status: "ACTIVE" },
+  ])
+  const [modules, setModules] = useState([
+    { id: "1", name: "User Management", code: "USER", status: "ACTIVE" },
+    { id: "2", name: "Property Management", code: "PROPERTY", status: "ACTIVE" },
+    { id: "3", name: "Financial Management", code: "FINANCIAL", status: "ACTIVE" },
+  ])
+  const [permissions, setPermissions] = useState([
+    { id: "1", name: "Add", code: "ADD", status: "ACTIVE" },
+    { id: "2", name: "Edit", code: "EDIT", status: "ACTIVE" },
+    { id: "3", name: "Delete", code: "DELETE", status: "ACTIVE" },
+    { id: "4", name: "View", code: "VIEW", status: "ACTIVE" },
+  ])
+  const [domains, setDomains] = useState([
+    { id: "1", name: "Maha One", email: "admin@mahaone.com", phone: "0501234567", phoneCode: "+971", status: "ACTIVE" },
+    {
+      id: "2",
+      name: "Azure Gardens",
+      email: "admin@azuregardens.com",
+      phone: "0507654321",
+      phoneCode: "+971",
+      status: "ACTIVE",
+    },
+  ])
+
+  const [editingLanguage, setEditingLanguage] = useState<any>(null)
+  const [editingCurrency, setEditingCurrency] = useState<any>(null)
+  const [editingTimezone, setEditingTimezone] = useState<any>(null)
+  const [editingRole, setEditingRole] = useState<any>(null)
+  const [editingModule, setEditingModule] = useState<any>(null)
+  const [editingPermission, setEditingPermission] = useState<any>(null)
+  const [editingDomain, setEditingDomain] = useState<any>(null)
+
+  const [showAddLanguage, setShowAddLanguage] = useState(false)
+  const [showAddCurrency, setShowAddCurrency] = useState(false)
+  const [showAddTimezone, setShowAddTimezone] = useState(false)
+  const [showAddRole, setShowAddRole] = useState(false)
+  const [showAddModule, setShowAddModule] = useState(false)
+  const [showAddPermission, setShowAddPermission] = useState(false)
+  const [showAddDomain, setShowAddDomain] = useState(false)
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
+      case "ACTIVE":
       case "success":
       case "resolved":
       case "completed":
@@ -374,6 +458,7 @@ export default function SuperAdminDashboard() {
       case "overdue":
       case "escalated":
       case "urgent":
+      case "INACTIVE":
         return "bg-red-100 text-red-800"
       case "in_progress":
         return "bg-blue-100 text-blue-800"
@@ -468,39 +553,108 @@ export default function SuperAdminDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-10 bg-white/80 backdrop-blur-sm text-xs">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+          <TabsList className="inline-flex w-full overflow-x-auto bg-white/80 backdrop-blur-sm border border-stone/20 rounded-lg p-1 scrollbar-thin scrollbar-thumb-stone/30 scrollbar-track-transparent">
+            <TabsTrigger
+              value="overview"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
               Overview
             </TabsTrigger>
             <TabsTrigger
               value="tenant-services"
-              className="data-[state=active]:bg-coral data-[state=active]:text-white"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
             >
               Tenant Services
             </TabsTrigger>
-            <TabsTrigger value="building-ops" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="building-ops"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
               Building Ops
             </TabsTrigger>
-            <TabsTrigger value="landlord-tools" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="landlord-tools"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
               Landlord Tools
             </TabsTrigger>
-            <TabsTrigger value="financial" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="financial"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
               Financial
             </TabsTrigger>
-            <TabsTrigger value="approvals" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="approvals"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
               Approvals
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="analytics"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
               Analytics
             </TabsTrigger>
-            <TabsTrigger value="emergency" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="emergency"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
               Emergency
             </TabsTrigger>
-            <TabsTrigger value="system" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="system"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
               System
             </TabsTrigger>
-            <TabsTrigger value="reports" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="reports"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
               Reports
+            </TabsTrigger>
+            <TabsTrigger
+              value="languages"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
+              Languages
+            </TabsTrigger>
+            <TabsTrigger
+              value="currencies"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
+              Currencies
+            </TabsTrigger>
+            <TabsTrigger
+              value="timezones"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
+              Timezones
+            </TabsTrigger>
+            <TabsTrigger
+              value="roles"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
+              Roles
+            </TabsTrigger>
+            <TabsTrigger
+              value="modules"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
+              Modules
+            </TabsTrigger>
+            <TabsTrigger
+              value="permissions"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
+              Permissions
+            </TabsTrigger>
+            <TabsTrigger
+              value="domains"
+              className="whitespace-nowrap data-[state=active]:bg-coral data-[state=active]:text-white"
+            >
+              Domains
             </TabsTrigger>
           </TabsList>
 
@@ -1019,6 +1173,394 @@ export default function SuperAdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="languages" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-teal font-serif">Language Management</h2>
+                <p className="text-sm text-teal/70">Manage system languages and translations</p>
+              </div>
+              <Button
+                onClick={() => setShowAddLanguage(true)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Language
+              </Button>
+            </div>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Code</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {languages.map((language) => (
+                      <TableRow key={language.id}>
+                        <TableCell className="font-medium">{language.name}</TableCell>
+                        <TableCell>{language.code}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(language.status)}>{language.status}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => setEditingLanguage(language)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setLanguages(languages.filter((l) => l.id !== language.id))}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="currencies" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-teal font-serif">Currency Management</h2>
+                <p className="text-sm text-teal/70">Manage system currencies and exchange rates</p>
+              </div>
+              <Button
+                onClick={() => setShowAddCurrency(true)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Currency
+              </Button>
+            </div>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Code</TableHead>
+                      <TableHead>Symbol</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {currencies.map((currency) => (
+                      <TableRow key={currency.id}>
+                        <TableCell className="font-medium">{currency.name}</TableCell>
+                        <TableCell>{currency.code}</TableCell>
+                        <TableCell>{currency.symbol}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(currency.status)}>{currency.status}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => setEditingCurrency(currency)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setCurrencies(currencies.filter((c) => c.id !== currency.id))}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="timezones" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-teal font-serif">Timezone Management</h2>
+                <p className="text-sm text-teal/70">Manage system timezones and regional settings</p>
+              </div>
+              <Button
+                onClick={() => setShowAddTimezone(true)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Timezone
+              </Button>
+            </div>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Code</TableHead>
+                      <TableHead>Region</TableHead>
+                      <TableHead>Offset</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {timezones.map((timezone) => (
+                      <TableRow key={timezone.id}>
+                        <TableCell className="font-medium">{timezone.name}</TableCell>
+                        <TableCell>{timezone.code}</TableCell>
+                        <TableCell>{timezone.regionName}</TableCell>
+                        <TableCell>{timezone.offsetString}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(timezone.status)}>{timezone.status}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => setEditingTimezone(timezone)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setTimezones(timezones.filter((t) => t.id !== timezone.id))}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="roles" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-teal font-serif">Role Management</h2>
+                <p className="text-sm text-teal/70">Manage user roles and access levels</p>
+              </div>
+              <Button
+                onClick={() => setShowAddRole(true)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Role
+              </Button>
+            </div>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Code</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {roles.map((role) => (
+                      <TableRow key={role.id}>
+                        <TableCell className="font-medium">{role.name}</TableCell>
+                        <TableCell>{role.code}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(role.status)}>{role.status}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => setEditingRole(role)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setRoles(roles.filter((r) => r.id !== role.id))}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="modules" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-teal font-serif">Module Management</h2>
+                <p className="text-sm text-teal/70">Manage system modules and features</p>
+              </div>
+              <Button
+                onClick={() => setShowAddModule(true)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Module
+              </Button>
+            </div>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Code</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {modules.map((module) => (
+                      <TableRow key={module.id}>
+                        <TableCell className="font-medium">{module.name}</TableCell>
+                        <TableCell>{module.code}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(module.status)}>{module.status}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => setEditingModule(module)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setModules(modules.filter((m) => m.id !== module.id))}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="permissions" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-teal font-serif">Permission Management</h2>
+                <p className="text-sm text-teal/70">Manage system permissions and access rights</p>
+              </div>
+              <Button
+                onClick={() => setShowAddPermission(true)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Permission
+              </Button>
+            </div>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Code</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {permissions.map((permission) => (
+                      <TableRow key={permission.id}>
+                        <TableCell className="font-medium">{permission.name}</TableCell>
+                        <TableCell>{permission.code}</TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(permission.status)}>{permission.status}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => setEditingPermission(permission)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setPermissions(permissions.filter((p) => p.id !== permission.id))}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="domains" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-teal font-serif">Domain Management</h2>
+                <p className="text-sm text-teal/70">Manage system domains and organizations</p>
+              </div>
+              <Button
+                onClick={() => setShowAddDomain(true)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Domain
+              </Button>
+            </div>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Phone</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {domains.map((domain) => (
+                      <TableRow key={domain.id}>
+                        <TableCell className="font-medium">{domain.name}</TableCell>
+                        <TableCell>{domain.email}</TableCell>
+                        <TableCell>
+                          {domain.phoneCode} {domain.phone}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(domain.status)}>{domain.status}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => setEditingDomain(domain)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setDomains(domains.filter((d) => d.id !== domain.id))}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-600" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
 
@@ -1091,6 +1633,600 @@ export default function SuperAdminDashboard() {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {editingLanguage && (
+        <Dialog open={!!editingLanguage} onOpenChange={() => setEditingLanguage(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Language</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input defaultValue={editingLanguage.name} />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input defaultValue={editingLanguage.code} />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select defaultValue={editingLanguage.status}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditingLanguage(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setEditingLanguage(null)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Update
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {editingCurrency && (
+        <Dialog open={!!editingCurrency} onOpenChange={() => setEditingCurrency(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Currency</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input defaultValue={editingCurrency.name} />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input defaultValue={editingCurrency.code} />
+              </div>
+              <div className="space-y-2">
+                <Label>Symbol</Label>
+                <Input defaultValue={editingCurrency.symbol} />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select defaultValue={editingCurrency.status}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditingCurrency(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setEditingCurrency(null)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Update
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {editingTimezone && (
+        <Dialog open={!!editingTimezone} onOpenChange={() => setEditingTimezone(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Timezone</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input defaultValue={editingTimezone.name} />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input defaultValue={editingTimezone.code} />
+              </div>
+              <div className="space-y-2">
+                <Label>Region Name</Label>
+                <Input defaultValue={editingTimezone.regionName} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Offset Hours</Label>
+                  <Input type="number" defaultValue={editingTimezone.offsetHours} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Offset Minutes</Label>
+                  <Input type="number" defaultValue={editingTimezone.offsetMinutes} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Offset String</Label>
+                <Input defaultValue={editingTimezone.offsetString} />
+              </div>
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea defaultValue={editingTimezone.description} />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select defaultValue={editingTimezone.status}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditingTimezone(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setEditingTimezone(null)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Update
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {editingRole && (
+        <Dialog open={!!editingRole} onOpenChange={() => setEditingRole(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Role</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input defaultValue={editingRole.name} />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input defaultValue={editingRole.code} />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select defaultValue={editingRole.status}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditingRole(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setEditingRole(null)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Update
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {editingModule && (
+        <Dialog open={!!editingModule} onOpenChange={() => setEditingModule(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Module</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input defaultValue={editingModule.name} />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input defaultValue={editingModule.code} />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select defaultValue={editingModule.status}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditingModule(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setEditingModule(null)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Update
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {editingPermission && (
+        <Dialog open={!!editingPermission} onOpenChange={() => setEditingPermission(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Permission</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input defaultValue={editingPermission.name} />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input defaultValue={editingPermission.code} />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select defaultValue={editingPermission.status}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditingPermission(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setEditingPermission(null)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Update
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {editingDomain && (
+        <Dialog open={!!editingDomain} onOpenChange={() => setEditingDomain(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Domain</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input defaultValue={editingDomain.name} />
+              </div>
+              <div className="space-y-2">
+                <Label>Email</Label>
+                <Input type="email" defaultValue={editingDomain.email} />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Phone Code</Label>
+                  <Input defaultValue={editingDomain.phoneCode} />
+                </div>
+                <div className="space-y-2 col-span-2">
+                  <Label>Phone</Label>
+                  <Input defaultValue={editingDomain.phone} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select defaultValue={editingDomain.status}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditingDomain(null)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setEditingDomain(null)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Update
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showAddLanguage && (
+        <Dialog open={showAddLanguage} onOpenChange={setShowAddLanguage}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Language</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input placeholder="Enter language name" />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input placeholder="Enter language code (e.g., en, ar)" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddLanguage(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setShowAddLanguage(false)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Add Language
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showAddCurrency && (
+        <Dialog open={showAddCurrency} onOpenChange={setShowAddCurrency}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Currency</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input placeholder="Enter currency name" />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input placeholder="Enter currency code (e.g., USD, AED)" />
+              </div>
+              <div className="space-y-2">
+                <Label>Symbol</Label>
+                <Input placeholder="Enter currency symbol (e.g., $, د.إ)" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddCurrency(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setShowAddCurrency(false)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Add Currency
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showAddTimezone && (
+        <Dialog open={showAddTimezone} onOpenChange={setShowAddTimezone}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Timezone</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input placeholder="Enter timezone name (e.g., Asia/Dubai)" />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input placeholder="Enter timezone code" />
+              </div>
+              <div className="space-y-2">
+                <Label>Region Name</Label>
+                <Input placeholder="Enter region name" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Offset Hours</Label>
+                  <Input type="number" placeholder="0" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Offset Minutes</Label>
+                  <Input type="number" placeholder="0" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Offset String</Label>
+                <Input placeholder="GMT+04:00" />
+              </div>
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Textarea placeholder="Enter timezone description" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddTimezone(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setShowAddTimezone(false)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Add Timezone
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showAddRole && (
+        <Dialog open={showAddRole} onOpenChange={setShowAddRole}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Role</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input placeholder="Enter role name" />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input placeholder="Enter role code (e.g., ADMIN, USER)" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddRole(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setShowAddRole(false)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Add Role
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showAddModule && (
+        <Dialog open={showAddModule} onOpenChange={setShowAddModule}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Module</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input placeholder="Enter module name" />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input placeholder="Enter module code" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddModule(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setShowAddModule(false)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Add Module
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showAddPermission && (
+        <Dialog open={showAddPermission} onOpenChange={setShowAddPermission}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Permission</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input placeholder="Enter permission name" />
+              </div>
+              <div className="space-y-2">
+                <Label>Code</Label>
+                <Input placeholder="Enter permission code (e.g., ADD, EDIT, DELETE)" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddPermission(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setShowAddPermission(false)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Add Permission
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showAddDomain && (
+        <Dialog open={showAddDomain} onOpenChange={setShowAddDomain}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Domain</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input placeholder="Enter domain name" />
+              </div>
+              <div className="space-y-2">
+                <Label>Email</Label>
+                <Input type="email" placeholder="Enter email address" />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Phone Code</Label>
+                  <Input placeholder="+971" />
+                </div>
+                <div className="space-y-2 col-span-2">
+                  <Label>Phone</Label>
+                  <Input placeholder="Enter phone number" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Password</Label>
+                <Input type="password" placeholder="Enter password" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddDomain(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => setShowAddDomain(false)}
+                className="bg-gradient-to-r from-coral to-coral-dark text-white"
+              >
+                Add Domain
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   )
