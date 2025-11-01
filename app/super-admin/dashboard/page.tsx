@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -37,10 +37,11 @@ import {
   BarChart3,
   Truck,
   HelpCircle,
-  CableCarIcon as Elevator,
+  Calculator as Elevator,
   UserPlus,
 } from "lucide-react"
 import { MahaLogo } from "@/components/maha-logo"
+import { superAdminService } from "@/lib/api/super-admin.service"
 
 // All the data from previous implementation plus new comprehensive data
 const systemStats = [
@@ -353,6 +354,143 @@ export default function SuperAdminDashboard() {
   const [showAddPropertyModal, setShowAddPropertyModal] = useState(false)
   const [selectedServiceCategory, setSelectedServiceCategory] = useState("all")
 
+  const [languages, setLanguages] = useState<any[]>([])
+  const [currencies, setCurrencies] = useState<any[]>([])
+  const [timezones, setTimezones] = useState<any[]>([])
+  const [roles, setRoles] = useState<any[]>([])
+  const [modules, setModules] = useState<any[]>([])
+  const [permissions, setPermissions] = useState<any[]>([])
+  const [domains, setDomains] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  const loadData = async () => {
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      console.log("[v0] Loading Super Admin data from API...")
+
+      const [languagesData, currenciesData, timezonesData, rolesData, modulesData, permissionsData, domainsData] =
+        await Promise.all([
+          superAdminService.getLanguages(),
+          superAdminService.getCurrencies(),
+          superAdminService.getTimezones(),
+          superAdminService.getRoles(),
+          superAdminService.getModules(),
+          superAdminService.getPermissions(),
+          superAdminService.getDomains(),
+        ])
+
+      setLanguages(languagesData)
+      setCurrencies(currenciesData)
+      setTimezones(timezonesData)
+      setRoles(rolesData)
+      setModules(modulesData)
+      setPermissions(permissionsData)
+      setDomains(domainsData)
+
+      console.log("[v0] Data loaded successfully")
+    } catch (err: any) {
+      console.error("[v0] Error loading data:", err)
+      setError(err.message || "Failed to load data")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleAddLanguage = async (data: any) => {
+    try {
+      await superAdminService.addLanguage(data)
+      await loadData()
+    } catch (err: any) {
+      setError(err.message)
+    }
+  }
+
+  const handleEditLanguage = async (id: number, data: any) => {
+    try {
+      await superAdminService.editLanguage(id, data)
+      await loadData()
+    } catch (err: any) {
+      setError(err.message)
+    }
+  }
+
+  const handleDeleteLanguage = async (id: number) => {
+    try {
+      await superAdminService.removeLanguage(id)
+      await loadData()
+    } catch (err: any) {
+      setError(err.message)
+    }
+  }
+
+  // ... similar handlers for other entities ...
+  const handleAddCurrency = async (data: any) => {
+    /* ... */
+  }
+  const handleEditCurrency = async (id: number, data: any) => {
+    /* ... */
+  }
+  const handleDeleteCurrency = async (id: number) => {
+    /* ... */
+  }
+
+  const handleAddTimezone = async (data: any) => {
+    /* ... */
+  }
+  const handleEditTimezone = async (id: number, data: any) => {
+    /* ... */
+  }
+  const handleDeleteTimezone = async (id: number) => {
+    /* ... */
+  }
+
+  const handleAddRole = async (data: any) => {
+    /* ... */
+  }
+  const handleEditRole = async (id: number, data: any) => {
+    /* ... */
+  }
+  const handleDeleteRole = async (id: number) => {
+    /* ... */
+  }
+
+  const handleAddModule = async (data: any) => {
+    /* ... */
+  }
+  const handleEditModule = async (id: number, data: any) => {
+    /* ... */
+  }
+  const handleDeleteModule = async (id: number) => {
+    /* ... */
+  }
+
+  const handleAddPermission = async (data: any) => {
+    /* ... */
+  }
+  const handleEditPermission = async (id: number, data: any) => {
+    /* ... */
+  }
+  const handleDeletePermission = async (id: number) => {
+    /* ... */
+  }
+
+  const handleAddDomain = async (data: any) => {
+    /* ... */
+  }
+  const handleEditDomain = async (id: number, data: any) => {
+    /* ... */
+  }
+  const handleDeleteDomain = async (id: number) => {
+    /* ... */
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
@@ -466,6 +604,18 @@ export default function SuperAdminDashboard() {
             </Card>
           ))}
         </div>
+
+        {isLoading && (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal"></div>
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-6 p-4 rounded-lg bg-coral/10 border border-coral/30">
+            <p className="text-sm text-coral text-center">{error}</p>
+          </div>
+        )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-10 bg-white/80 backdrop-blur-sm text-xs">

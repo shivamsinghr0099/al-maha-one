@@ -11,6 +11,7 @@ import { Eye, EyeOff, Copy, Check, MapPin, Shield, Building2, User } from "lucid
 import { LoadingScreen } from "@/components/loading-screen"
 import { OnboardingFlow } from "@/components/onboarding"
 import { DarkModeToggle } from "@/components/dark-mode-toggle"
+import { authService } from "@/lib/api/auth"
 
 const userTypes = [
   {
@@ -78,6 +79,8 @@ export default function LoginPage() {
     password: "",
   })
   const [copiedField, setCopiedField] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -96,22 +99,34 @@ export default function LoginPage() {
     return () => clearTimeout(timer)
   }, [])
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
 
     if (!selectedUserType || !credentials.username || !credentials.password) {
-      alert(isArabic ? "يرجى ملء جميع الحقول" : "Please fill in all fields")
+      setError(isArabic ? "يرجى ملء جميع الحقول" : "Please fill in all fields")
       return
     }
 
-    setIsLoading(true)
+    setIsSubmitting(true)
 
-    setTimeout(() => {
+    try {
+      console.log("[v0] Attempting login with:", credentials.username)
+
+      const response = await authService.login(credentials.username, credentials.password)
+
+      console.log("[v0] Login successful, token received")
+
       const selectedUser = userTypes.find((u) => u.type === selectedUserType)
       if (selectedUser) {
         window.location.href = selectedUser.route
       }
-    }, 1000)
+    } catch (err: any) {
+      console.error("[v0] Login error:", err)
+      setError(err.message || (isArabic ? "فشل تسجيل الدخول" : "Login failed"))
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const copyToClipboard = (text: string, field: string) => {
@@ -293,6 +308,11 @@ export default function LoginPage() {
 
             {selectedUserType && (
               <form onSubmit={handleLogin} className="space-y-6 animate-fade-in">
+                {error && (
+                  <div className="p-4 rounded-lg bg-[#E56A5D]/10 border border-[#E56A5D]/30">
+                    <p className="text-sm text-[#E56A5D] text-center">{error}</p>
+                  </div>
+                )}
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="username" className="text-[#1C3F3A]">
@@ -342,9 +362,16 @@ export default function LoginPage() {
 
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-semibold bg-gradient-to-r from-[#1C3F3A] to-[#2E7D8F] hover:from-[#2E7D8F] hover:to-[#1C3F3A] text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  disabled={isSubmitting}
+                  className="w-full h-12 text-base font-semibold bg-gradient-to-r from-[#1C3F3A] to-[#2E7D8F] hover:from-[#2E7D8F] hover:to-[#1C3F3A] text-white shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
                 >
-                  {isArabic ? "تسجيل الدخول" : "Sign In"}
+                  {isSubmitting
+                    ? isArabic
+                      ? "جاري تسجيل الدخول..."
+                      : "Signing In..."
+                    : isArabic
+                      ? "تسجيل الدخول"
+                      : "Sign In"}
                 </Button>
               </form>
             )}
