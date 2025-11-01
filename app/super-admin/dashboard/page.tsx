@@ -362,6 +362,17 @@ export default function SuperAdminDashboard() {
   const [modules, setModules] = useState<any[]>([])
   const [permissions, setPermissions] = useState<any[]>([])
   const [domains, setDomains] = useState<any[]>([])
+  const [countries, setCountries] = useState<any[]>([])
+  const [cities, setCities] = useState<any[]>([])
+  const [areas, setAreas] = useState<any[]>([])
+  const [propertyTypes, setPropertyTypes] = useState<any[]>([])
+  const [amenities, setAmenities] = useState<any[]>([])
+  const [activeDomainTab, setActiveDomainTab] = useState("languages")
+  const [showAddDomainModal, setShowAddDomainModal] = useState(false)
+  const [showEditDomainModal, setShowEditDomainModal] = useState(false)
+  const [selectedDomainItem, setSelectedDomainItem] = useState<any>(null)
+  const [domainFormData, setDomainFormData] = useState<any>({})
+
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -376,25 +387,60 @@ export default function SuperAdminDashboard() {
     try {
       console.log("[v0] Loading Super Admin data from API...")
 
-      // const [languagesData, currenciesData, timezonesData, rolesData, modulesData, permissionsData, domainsData] =
-      //   await Promise.all([
-      //     superAdminService.getLanguages(),
-      //     superAdminService.getCurrencies(),
-      //     superAdminService.getTimezones(),
-      //     superAdminService.getRoles(),
-      //     superAdminService.getModules(),
-      //     superAdminService.getPermissions(),
-      //     superAdminService.getDomains(),
-      //   ])
-
       // Mocking data for now due to build system issue
-      const languagesData = [{ id: 1, name: "English" }]
-      const currenciesData = [{ id: 1, code: "AED" }]
-      const timezonesData = [{ id: 1, name: "UTC+4" }]
-      const rolesData = [{ id: 1, name: "Admin" }]
-      const modulesData = [{ id: 1, name: "Dashboard" }]
-      const permissionsData = [{ id: 1, name: "Read" }]
-      const domainsData = [{ id: 1, name: "example.com" }]
+      // const languagesData = [{ id: 1, name: "English" }]
+      // const currenciesData = [{ id: 1, code: "AED" }]
+      // const timezonesData = [{ id: 1, name: "UTC+4" }]
+      // const rolesData = [{ id: 1, name: "Admin" }]
+      // const modulesData = [{ id: 1, name: "Dashboard" }]
+      // const permissionsData = [{ id: 1, name: "Read" }]
+      // const domainsData = [{ id: 1, name: "example.com" }]
+
+      const languagesData = [
+        { id: 1, name: "English", code: "en", isActive: true },
+        { id: 2, name: "Arabic", code: "ar", isActive: true },
+      ]
+      const currenciesData = [
+        { id: 1, name: "UAE Dirham", code: "AED", symbol: "د.إ", isActive: true },
+        { id: 2, name: "US Dollar", code: "USD", symbol: "$", isActive: true },
+      ]
+      const timezonesData = [{ id: 1, name: "Gulf Standard Time", code: "GST", offset: "+04:00", isActive: true }]
+      const rolesData = [
+        { id: 1, name: "Super Admin", description: "Full system access", isActive: true },
+        { id: 2, name: "Building Manager", description: "Property management", isActive: true },
+      ]
+      const modulesData = [
+        { id: 1, name: "Dashboard", description: "Main dashboard", isActive: true },
+        { id: 2, name: "Tenant Management", description: "Manage tenants", isActive: true },
+      ]
+      const permissionsData = [
+        { id: 1, name: "Read", description: "View data", isActive: true },
+        { id: 2, name: "Write", description: "Create/Edit data", isActive: true },
+      ]
+      const domainsData = [{ id: 1, name: "mahaone.com", isActive: true }]
+      const countriesData = [
+        { id: 1, name: "United Arab Emirates", code: "AE", isActive: true },
+        { id: 2, name: "Saudi Arabia", code: "SA", isActive: true },
+      ]
+      const citiesData = [
+        { id: 1, name: "Dubai", countryId: 1, isActive: true },
+        { id: 2, name: "Abu Dhabi", countryId: 1, isActive: true },
+      ]
+      const areasData = [
+        { id: 1, name: "Dubai Marina", cityId: 1, isActive: true },
+        { id: 2, name: "Downtown Dubai", cityId: 1, isActive: true },
+      ]
+      const propertyTypesData = [
+        { id: 1, name: "Villa", description: "Standalone house", isActive: true },
+        { id: 2, name: "Apartment", description: "Multi-unit building", isActive: true },
+        { id: 3, name: "Townhouse", description: "Connected houses", isActive: true },
+      ]
+      const amenitiesData = [
+        { id: 1, name: "Swimming Pool", icon: "pool", isActive: true },
+        { id: 2, name: "Gym", icon: "gym", isActive: true },
+        { id: 3, name: "Parking", icon: "parking", isActive: true },
+        { id: 4, name: "BBQ Area", icon: "bbq", isActive: true },
+      ]
 
       setLanguages(languagesData)
       setCurrencies(currenciesData)
@@ -403,6 +449,11 @@ export default function SuperAdminDashboard() {
       setModules(modulesData)
       setPermissions(permissionsData)
       setDomains(domainsData)
+      setCountries(countriesData)
+      setCities(citiesData)
+      setAreas(areasData)
+      setPropertyTypes(propertyTypesData)
+      setAmenities(amenitiesData)
 
       console.log("[v0] Data loaded successfully")
     } catch (err: any) {
@@ -499,6 +550,109 @@ export default function SuperAdminDashboard() {
   }
   const handleDeleteDomain = async (id: number) => {
     /* ... */
+  }
+
+  const handleAddDomainItem = () => {
+    setDomainFormData({})
+    setSelectedDomainItem(null)
+    setShowAddDomainModal(true)
+  }
+
+  const handleEditDomainItem = (item: any) => {
+    setDomainFormData(item)
+    setSelectedDomainItem(item)
+    setShowEditDomainModal(true)
+  }
+
+  const handleDeleteDomainItem = async (id: number) => {
+    if (confirm("Are you sure you want to delete this item?")) {
+      // API call would go here
+      await loadData()
+    }
+  }
+
+  const handleSaveDomainItem = async () => {
+    try {
+      // API call would go here based on activeDomainTab
+      console.log("[v0] Saving domain item:", domainFormData)
+      setShowAddDomainModal(false)
+      setShowEditDomainModal(false)
+      await loadData()
+    } catch (err: any) {
+      setError(err.message)
+    }
+  }
+
+  const getDomainData = () => {
+    switch (activeDomainTab) {
+      case "languages":
+        return languages
+      case "currencies":
+        return currencies
+      case "timezones":
+        return timezones
+      case "countries":
+        return countries
+      case "cities":
+        return cities
+      case "areas":
+        return areas
+      case "property-types":
+        return propertyTypes
+      case "amenities":
+        return amenities
+      default:
+        return []
+    }
+  }
+
+  const getDomainFields = () => {
+    switch (activeDomainTab) {
+      case "languages":
+        return [
+          { name: "name", label: "Language Name", type: "text", placeholder: "e.g., English" },
+          { name: "code", label: "Language Code", type: "text", placeholder: "e.g., en" },
+        ]
+      case "currencies":
+        return [
+          { name: "name", label: "Currency Name", type: "text", placeholder: "e.g., UAE Dirham" },
+          { name: "code", label: "Currency Code", type: "text", placeholder: "e.g., AED" },
+          { name: "symbol", label: "Symbol", type: "text", placeholder: "e.g., د.إ" },
+        ]
+      case "timezones":
+        return [
+          { name: "name", label: "Timezone Name", type: "text", placeholder: "e.g., Gulf Standard Time" },
+          { name: "code", label: "Code", type: "text", placeholder: "e.g., GST" },
+          { name: "offset", label: "UTC Offset", type: "text", placeholder: "e.g., +04:00" },
+        ]
+      case "countries":
+        return [
+          { name: "name", label: "Country Name", type: "text", placeholder: "e.g., United Arab Emirates" },
+          { name: "code", label: "Country Code", type: "text", placeholder: "e.g., AE" },
+        ]
+      case "cities":
+        return [
+          { name: "name", label: "City Name", type: "text", placeholder: "e.g., Dubai" },
+          { name: "countryId", label: "Country", type: "select", options: countries },
+        ]
+      case "areas":
+        return [
+          { name: "name", label: "Area Name", type: "text", placeholder: "e.g., Dubai Marina" },
+          { name: "cityId", label: "City", type: "select", options: cities },
+        ]
+      case "property-types":
+        return [
+          { name: "name", label: "Property Type", type: "text", placeholder: "e.g., Villa" },
+          { name: "description", label: "Description", type: "textarea", placeholder: "Brief description" },
+        ]
+      case "amenities":
+        return [
+          { name: "name", label: "Amenity Name", type: "text", placeholder: "e.g., Swimming Pool" },
+          { name: "icon", label: "Icon", type: "text", placeholder: "e.g., pool" },
+        ]
+      default:
+        return []
+    }
   }
 
   const getStatusColor = (status: string) => {
@@ -656,8 +810,8 @@ export default function SuperAdminDashboard() {
             <TabsTrigger value="emergency" className="data-[state=active]:bg-coral data-[state=active]:text-white">
               Emergency
             </TabsTrigger>
-            <TabsTrigger value="system" className="data-[state=active]:bg-coral data-[state=active]:text-white">
-              System
+            <TabsTrigger value="domains" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+              Domains
             </TabsTrigger>
             <TabsTrigger value="reports" className="data-[state=active]:bg-coral data-[state=active]:text-white">
               Reports
@@ -1179,6 +1333,159 @@ export default function SuperAdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="domains" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-teal font-serif">Domain & List Management</h2>
+                <p className="text-sm text-teal/70 mt-1">
+                  Manage all system master data: languages, currencies, locations, and property configurations
+                </p>
+              </div>
+              <Button onClick={handleAddDomainItem} className="bg-gradient-to-r from-coral to-coral-dark text-white">
+                <UserPlus className="h-4 w-4 mr-2" />
+                Add New
+              </Button>
+            </div>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <Tabs value={activeDomainTab} onValueChange={setActiveDomainTab}>
+                  <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 bg-stone/10">
+                    <TabsTrigger value="languages" className="text-xs">
+                      Languages
+                    </TabsTrigger>
+                    <TabsTrigger value="currencies" className="text-xs">
+                      Currencies
+                    </TabsTrigger>
+                    <TabsTrigger value="timezones" className="text-xs">
+                      Timezones
+                    </TabsTrigger>
+                    <TabsTrigger value="countries" className="text-xs">
+                      Countries
+                    </TabsTrigger>
+                    <TabsTrigger value="cities" className="text-xs">
+                      Cities
+                    </TabsTrigger>
+                    <TabsTrigger value="areas" className="text-xs">
+                      Areas
+                    </TabsTrigger>
+                    <TabsTrigger value="property-types" className="text-xs">
+                      Property Types
+                    </TabsTrigger>
+                    <TabsTrigger value="amenities" className="text-xs">
+                      Amenities
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <div className="mt-6">
+                    <div className="mb-4">
+                      <Input
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="max-w-sm"
+                      />
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-stone/20">
+                            <th className="text-left py-3 px-4 text-sm font-semibold text-teal">ID</th>
+                            <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Name</th>
+                            {activeDomainTab === "currencies" && (
+                              <>
+                                <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Code</th>
+                                <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Symbol</th>
+                              </>
+                            )}
+                            {activeDomainTab === "languages" && (
+                              <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Code</th>
+                            )}
+                            {activeDomainTab === "timezones" && (
+                              <>
+                                <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Code</th>
+                                <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Offset</th>
+                              </>
+                            )}
+                            {activeDomainTab === "countries" && (
+                              <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Code</th>
+                            )}
+                            {(activeDomainTab === "property-types" || activeDomainTab === "amenities") && (
+                              <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Description</th>
+                            )}
+                            <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Status</th>
+                            <th className="text-right py-3 px-4 text-sm font-semibold text-teal">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {getDomainData()
+                            .filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                            .map((item) => (
+                              <tr key={item.id} className="border-b border-stone/10 hover:bg-stone/5">
+                                <td className="py-3 px-4 text-sm text-teal">{item.id}</td>
+                                <td className="py-3 px-4 text-sm text-teal font-medium">{item.name}</td>
+                                {activeDomainTab === "currencies" && (
+                                  <>
+                                    <td className="py-3 px-4 text-sm text-teal">{item.code}</td>
+                                    <td className="py-3 px-4 text-sm text-teal">{item.symbol}</td>
+                                  </>
+                                )}
+                                {activeDomainTab === "languages" && (
+                                  <td className="py-3 px-4 text-sm text-teal">{item.code}</td>
+                                )}
+                                {activeDomainTab === "timezones" && (
+                                  <>
+                                    <td className="py-3 px-4 text-sm text-teal">{item.code}</td>
+                                    <td className="py-3 px-4 text-sm text-teal">{item.offset}</td>
+                                  </>
+                                )}
+                                {activeDomainTab === "countries" && (
+                                  <td className="py-3 px-4 text-sm text-teal">{item.code}</td>
+                                )}
+                                {(activeDomainTab === "property-types" || activeDomainTab === "amenities") && (
+                                  <td className="py-3 px-4 text-sm text-teal/70">{item.description || item.icon}</td>
+                                )}
+                                <td className="py-3 px-4">
+                                  <Badge
+                                    className={
+                                      item.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                    }
+                                  >
+                                    {item.isActive ? "Active" : "Inactive"}
+                                  </Badge>
+                                </td>
+                                <td className="py-3 px-4 text-right">
+                                  <div className="flex items-center justify-end space-x-2">
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleEditDomainItem(item)}
+                                      className="text-teal hover:text-teal hover:bg-teal/10"
+                                    >
+                                      Edit
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleDeleteDomainItem(item.id)}
+                                      className="text-coral hover:text-coral hover:bg-coral/10"
+                                    >
+                                      Delete
+                                    </Button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
 
@@ -1246,6 +1553,92 @@ export default function SuperAdminDashboard() {
                   className="flex-1 bg-gradient-to-r from-coral to-coral-dark text-white"
                 >
                   Add Property
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {(showAddDomainModal || showEditDomainModal) && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-md bg-white max-h-[90vh] overflow-y-auto">
+            <CardHeader>
+              <CardTitle className="text-teal font-serif">
+                {showEditDomainModal ? "Edit" : "Add"} {activeDomainTab.replace("-", " ").toUpperCase()}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {getDomainFields().map((field) => (
+                <div key={field.name} className="space-y-2">
+                  <Label htmlFor={field.name}>{field.label}</Label>
+                  {field.type === "select" ? (
+                    <Select
+                      value={domainFormData[field.name]?.toString() || ""}
+                      onValueChange={(value) =>
+                        setDomainFormData({ ...domainFormData, [field.name]: Number.parseInt(value) })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={`Select ${field.label}`} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {field.options?.map((option: any) => (
+                          <SelectItem key={option.id} value={option.id.toString()}>
+                            {option.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : field.type === "textarea" ? (
+                    <textarea
+                      id={field.name}
+                      placeholder={field.placeholder}
+                      value={domainFormData[field.name] || ""}
+                      onChange={(e) => setDomainFormData({ ...domainFormData, [field.name]: e.target.value })}
+                      className="w-full px-3 py-2 border border-stone/30 rounded-md text-teal placeholder:text-stone/50 focus:outline-none focus:ring-2 focus:ring-teal/20"
+                      rows={3}
+                    />
+                  ) : (
+                    <Input
+                      id={field.name}
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      value={domainFormData[field.name] || ""}
+                      onChange={(e) => setDomainFormData({ ...domainFormData, [field.name]: e.target.value })}
+                      className="text-teal placeholder:text-stone/50"
+                    />
+                  )}
+                </div>
+              ))}
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="isActive"
+                  checked={domainFormData.isActive !== false}
+                  onChange={(e) => setDomainFormData({ ...domainFormData, isActive: e.target.checked })}
+                  className="rounded border-stone/30"
+                />
+                <Label htmlFor="isActive" className="cursor-pointer">
+                  Active
+                </Label>
+              </div>
+              <div className="flex space-x-2 pt-4">
+                <Button
+                  onClick={() => {
+                    setShowAddDomainModal(false)
+                    setShowEditDomainModal(false)
+                  }}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSaveDomainItem}
+                  className="flex-1 bg-gradient-to-r from-coral to-coral-dark text-white"
+                >
+                  {showEditDomainModal ? "Update" : "Add"}
                 </Button>
               </div>
             </CardContent>
