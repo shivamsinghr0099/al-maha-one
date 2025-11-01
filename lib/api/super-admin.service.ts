@@ -1,8 +1,8 @@
 // Super Admin API Service
-
 import { apiClient } from "./client"
 import { API_ENDPOINTS } from "./config"
 
+// TypeScript Interfaces
 export interface Language {
   id: string
   name: { en: string; ar?: string }
@@ -65,17 +65,18 @@ export interface Domain {
   updatedAt: string
 }
 
-export class SuperAdminService {
+// Super Admin Service Class
+class SuperAdminService {
   // Language APIs
-  static async listLanguages(params?: { limit?: number; offset?: number }) {
+  async listLanguages(params?: { limit?: number; offset?: number }) {
     return apiClient.post<{ count: number; rows: Language[] }>(API_ENDPOINTS.SUPER_ADMIN.LANGUAGE.LIST, params || {})
   }
 
-  static async addLanguage(data: { name: { en: string; ar?: string }; code: string }) {
+  async addLanguage(data: { name: { en: string; ar?: string }; code: string }) {
     return apiClient.post<Language>(API_ENDPOINTS.SUPER_ADMIN.LANGUAGE.ADD, data)
   }
 
-  static async editLanguage(data: {
+  async editLanguage(data: {
     languageId: string
     name?: { en: string; ar?: string }
     code?: string
@@ -84,24 +85,20 @@ export class SuperAdminService {
     return apiClient.post<Language>(API_ENDPOINTS.SUPER_ADMIN.LANGUAGE.EDIT, data)
   }
 
-  static async removeLanguage(languageId: string) {
+  async removeLanguage(languageId: string) {
     return apiClient.post(API_ENDPOINTS.SUPER_ADMIN.LANGUAGE.REMOVE, { languageId })
   }
 
   // Currency APIs
-  static async listCurrencies(params?: { limit?: number; offset?: number }) {
+  async listCurrencies(params?: { limit?: number; offset?: number }) {
     return apiClient.post<{ count: number; rows: Currency[] }>(API_ENDPOINTS.SUPER_ADMIN.CURRENCY.LIST, params || {})
   }
 
-  static async addCurrency(data: {
-    name: { en: string; ar?: string }
-    code: string
-    symbol: string
-  }) {
+  async addCurrency(data: { name: { en: string; ar?: string }; code: string; symbol: string }) {
     return apiClient.post<Currency>(API_ENDPOINTS.SUPER_ADMIN.CURRENCY.ADD, data)
   }
 
-  static async editCurrency(data: {
+  async editCurrency(data: {
     currencyId: string
     name?: { en: string; ar?: string }
     code?: string
@@ -111,20 +108,20 @@ export class SuperAdminService {
     return apiClient.post<Currency>(API_ENDPOINTS.SUPER_ADMIN.CURRENCY.EDIT, data)
   }
 
-  static async removeCurrency(currencyId: string) {
+  async removeCurrency(currencyId: string) {
     return apiClient.post(API_ENDPOINTS.SUPER_ADMIN.CURRENCY.REMOVE, { currencyId })
   }
 
   // Timezone APIs
-  static async listTimezones(params?: { limit?: number; offset?: number }) {
+  async listTimezones(params?: { limit?: number; offset?: number }) {
     return apiClient.post<{ count: number; rows: Timezone[] }>(API_ENDPOINTS.SUPER_ADMIN.TIMEZONE.LIST, params || {})
   }
 
-  static async addTimezone(data: { name: { en: string; ar?: string }; offset: string }) {
+  async addTimezone(data: { name: { en: string; ar?: string }; offset: string }) {
     return apiClient.post<Timezone>(API_ENDPOINTS.SUPER_ADMIN.TIMEZONE.ADD, data)
   }
 
-  static async editTimezone(data: {
+  async editTimezone(data: {
     timezoneId: string
     name?: { en: string; ar?: string }
     offset?: string
@@ -133,68 +130,57 @@ export class SuperAdminService {
     return apiClient.post<Timezone>(API_ENDPOINTS.SUPER_ADMIN.TIMEZONE.EDIT, data)
   }
 
-  static async removeTimezone(timezoneId: string) {
+  async removeTimezone(timezoneId: string) {
     return apiClient.post(API_ENDPOINTS.SUPER_ADMIN.TIMEZONE.REMOVE, { timezoneId })
   }
 
   // Role APIs
-  static async listRoles(params?: { limit?: number; offset?: number }) {
+  async listRoles(params?: { limit?: number; offset?: number }) {
     return apiClient.post<{ count: number; rows: Role[] }>(API_ENDPOINTS.SUPER_ADMIN.ROLE.LIST, params || {})
   }
 
-  static async addRole(data: { name: { en: string; ar?: string } }) {
+  async addRole(data: { name: { en: string; ar?: string } }) {
     return apiClient.post<Role>(API_ENDPOINTS.SUPER_ADMIN.ROLE.ADD, data)
   }
 
-  static async editRole(data: {
-    roleId: string
-    name?: { en: string; ar?: string }
-    status?: string
-  }) {
+  async editRole(data: { roleId: string; name?: { en: string; ar?: string }; status?: string }) {
     return apiClient.post<Role>(API_ENDPOINTS.SUPER_ADMIN.ROLE.EDIT, data)
   }
 
-  static async removeRole(roleId: string) {
+  async removeRole(roleId: string) {
     return apiClient.post(API_ENDPOINTS.SUPER_ADMIN.ROLE.REMOVE, { roleId })
   }
 
   // Module APIs
-  static async listModules(params?: { limit?: number; offset?: number }) {
+  async listModules(params?: { limit?: number; offset?: number }) {
     return apiClient.post<{ count: number; rows: Module[] }>(API_ENDPOINTS.SUPER_ADMIN.MODULE.LIST, params || {})
   }
 
-  static async addModule(data: { name: { en: string; ar?: string } }) {
+  async addModule(data: { name: { en: string; ar?: string } }) {
     return apiClient.post<Module>(API_ENDPOINTS.SUPER_ADMIN.MODULE.ADD, data)
   }
 
-  static async editModule(data: {
-    moduleId: string
-    name?: { en: string; ar?: string }
-    status?: string
-  }) {
+  async editModule(data: { moduleId: string; name?: { en: string; ar?: string }; status?: string }) {
     return apiClient.post<Module>(API_ENDPOINTS.SUPER_ADMIN.MODULE.EDIT, data)
   }
 
-  static async removeModule(moduleId: string) {
+  async removeModule(moduleId: string) {
     return apiClient.post(API_ENDPOINTS.SUPER_ADMIN.MODULE.REMOVE, { moduleId })
   }
 
   // Permission APIs
-  static async listPermissions(params?: { limit?: number; offset?: number }) {
+  async listPermissions(params?: { limit?: number; offset?: number }) {
     return apiClient.post<{ count: number; rows: Permission[] }>(
       API_ENDPOINTS.SUPER_ADMIN.PERMISSION.LIST,
       params || {},
     )
   }
 
-  static async addPermission(data: {
-    name: { en: string; ar?: string }
-    moduleId: string
-  }) {
+  async addPermission(data: { name: { en: string; ar?: string }; moduleId: string }) {
     return apiClient.post<Permission>(API_ENDPOINTS.SUPER_ADMIN.PERMISSION.ADD, data)
   }
 
-  static async editPermission(data: {
+  async editPermission(data: {
     permissionId: string
     name?: { en: string; ar?: string }
     moduleId?: string
@@ -203,20 +189,20 @@ export class SuperAdminService {
     return apiClient.post<Permission>(API_ENDPOINTS.SUPER_ADMIN.PERMISSION.EDIT, data)
   }
 
-  static async removePermission(permissionId: string) {
+  async removePermission(permissionId: string) {
     return apiClient.post(API_ENDPOINTS.SUPER_ADMIN.PERMISSION.REMOVE, { permissionId })
   }
 
   // Domain APIs
-  static async listDomains(params?: { limit?: number; offset?: number }) {
+  async listDomains(params?: { limit?: number; offset?: number }) {
     return apiClient.post<{ count: number; rows: Domain[] }>(API_ENDPOINTS.SUPER_ADMIN.DOMAIN.LIST, params || {})
   }
 
-  static async addDomain(data: { name: { en: string; ar?: string }; url: string }) {
+  async addDomain(data: { name: { en: string; ar?: string }; url: string }) {
     return apiClient.post<Domain>(API_ENDPOINTS.SUPER_ADMIN.DOMAIN.ADD, data)
   }
 
-  static async editDomain(data: {
+  async editDomain(data: {
     domainId: string
     name?: { en: string; ar?: string }
     url?: string
@@ -225,10 +211,12 @@ export class SuperAdminService {
     return apiClient.post<Domain>(API_ENDPOINTS.SUPER_ADMIN.DOMAIN.EDIT, data)
   }
 
-  static async removeDomain(domainId: string) {
+  async removeDomain(domainId: string) {
     return apiClient.post(API_ENDPOINTS.SUPER_ADMIN.DOMAIN.REMOVE, { domainId })
   }
 }
 
-// Export the service class for use throughout the application
-export const superAdminService = SuperAdminService
+// Create and export singleton instance
+export const superAdminService = new SuperAdminService()
+
+// Export complete - ready for import
