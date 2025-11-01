@@ -1,6 +1,7 @@
 // API Configuration and Base Setup
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.mahaone.com"
+export const USE_DEMO_MODE = process.env.NEXT_PUBLIC_USE_DEMO_MODE === "true" || !process.env.NEXT_PUBLIC_API_BASE_URL
 
 export const API_ENDPOINTS = {
   // Super Admin Endpoints

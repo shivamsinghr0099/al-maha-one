@@ -24,6 +24,13 @@ export interface AuthResponse {
   }
 }
 
+const DEMO_CREDENTIALS = {
+  "admin@mahaone.ae": { password: "admin123", role: "super-admin" },
+  "manager@mahaone.ae": { password: "manager123", role: "building-manager" },
+  "landlord@mahaone.ae": { password: "landlord123", role: "landlord" },
+  "tenant@mahaone.ae": { password: "tenant123", role: "tenant" },
+}
+
 export class AuthService {
   static setAuthToken(token: string): void {
     if (typeof window !== "undefined") {
@@ -63,18 +70,64 @@ export class AuthService {
     return !!this.getAuthToken()
   }
 
+  static async loginDemo(email: string, password: string): Promise<AuthResponse> {
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
+    const demoUser = DEMO_CREDENTIALS[email as keyof typeof DEMO_CREDENTIALS]
+
+    if (!demoUser || demoUser.password !== password) {
+      throw new Error("Invalid credentials")
+    }
+
+    // Create mock auth response
+    const mockResponse: AuthResponse = {
+      token: `demo_token_${Date.now()}`,
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+      existUser: {
+        id: `user_${Date.now()}`,
+        firstName: { name: email.split("@")[0] },
+        lastName: { name: "User" },
+        email: email,
+        phoneNumber: "+971501234567",
+        roleId: demoUser.role,
+        domainId: "mahaone",
+        status: "active",
+      },
+    }
+
+    this.setAuthToken(mockResponse.token)
+    this.setUserData(mockResponse.existUser)
+
+    return mockResponse
+  }
+
   static async login(email: string, password: string): Promise<AuthResponse> {
     const credentials: LoginCredentials = {
       email,
       password,
     }
 
-    // Determine which login endpoint to use based on email domain or user type
-    // For demo purposes, route based on email prefix
-    if (email.includes("admin@")) {
-      return this.loginSuperAdmin(credentials)
-    } else {
-      return this.loginBuildingManager(credentials)
+    try {
+      // Check if this is a demo credential
+      if (email in DEMO_CREDENTIALS) {
+        console.log("[v0] Using demo login for:", email)
+        return await this.loginDemo(email, password)
+      }
+
+      // Otherwise try real API
+      console.log("[v0] Attempting real API login for:", email)
+
+      // Determine which login endpoint to use based on email domain or user type
+      if (email.includes("admin@")) {
+        return await this.loginSuperAdmin(credentials)
+      } else {
+        return await this.loginBuildingManager(credentials)
+      }
+    } catch (error) {
+      console.error("[v0] API login failed, trying demo login:", error)
+      // If API fails, try demo login as fallback
+      return await this.loginDemo(email, password)
     }
   }
 
