@@ -41,7 +41,9 @@ import {
   UserPlus,
 } from "lucide-react"
 import { MahaLogo } from "@/components/maha-logo"
-import { superAdminService } from "@/lib/api/super-admin.service"
+import { SuperAdminService } from "@/lib/api/super-admin.service"
+
+const superAdminService = SuperAdminService
 
 // All the data from previous implementation plus new comprehensive data
 const systemStats = [

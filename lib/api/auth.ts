@@ -63,6 +63,21 @@ export class AuthService {
     return !!this.getAuthToken()
   }
 
+  static async login(email: string, password: string): Promise<AuthResponse> {
+    const credentials: LoginCredentials = {
+      email,
+      password,
+    }
+
+    // Determine which login endpoint to use based on email domain or user type
+    // For demo purposes, route based on email prefix
+    if (email.includes("admin@")) {
+      return this.loginSuperAdmin(credentials)
+    } else {
+      return this.loginBuildingManager(credentials)
+    }
+  }
+
   static async loginSuperAdmin(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>(API_ENDPOINTS.SUPER_ADMIN.LOGIN, credentials, false)
 

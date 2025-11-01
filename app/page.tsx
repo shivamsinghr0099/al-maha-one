@@ -324,7 +324,7 @@ export default function LoginPage() {
                       value={credentials.username}
                       onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
                       placeholder={isArabic ? "أدخل اسم المستخدم" : "Enter username"}
-                      className="h-12 border-[#C2C5AA]/30 focus:border-[#1C3F3A] focus:ring-[#1C3F3A]"
+                      className="h-12 border-[#C2C5AA]/30 focus:border-[#1C3F3A] focus:ring-[#1C3F3A] text-[#1C3F3A] placeholder:text-[#C2C5AA]"
                       required
                     />
                   </div>
@@ -340,7 +340,7 @@ export default function LoginPage() {
                         value={credentials.password}
                         onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                         placeholder={isArabic ? "أدخل كلمة المرور" : "Enter password"}
-                        className="h-12 pr-12 border-[#C2C5AA]/30 focus:border-[#1C3F3A] focus:ring-[#1C3F3A]"
+                        className="h-12 pr-12 border-[#C2C5AA]/30 focus:border-[#1C3F3A] focus:ring-[#1C3F3A] text-[#1C3F3A] placeholder:text-[#C2C5AA]"
                         required
                       />
                       <Button

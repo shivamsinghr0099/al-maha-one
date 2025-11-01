@@ -230,5 +230,5 @@ export class SuperAdminService {
   }
 }
 
-// Explicit named export
+// Export the service class for use throughout the application
 export const superAdminService = SuperAdminService
