@@ -4,74 +4,100 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.25 0.05 180);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.05 180);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0.05 180);
-  --primary: oklch(0.45 0.08 195);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.72 0.12 42);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.96 0.01 240);
-  --muted-foreground: oklch(0.556 0.02 240);
-  --accent: oklch(0.65 0.15 25);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.62 0.18 25);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.01 240);
-  --input: oklch(0.92 0.01 240);
-  --ring: oklch(0.45 0.08 195);
-  --chart-1: oklch(0.45 0.08 195);
-  --chart-2: oklch(0.72 0.12 42);
-  --chart-3: oklch(0.65 0.15 25);
-  --chart-4: oklch(0.55 0.08 180);
-  --chart-5: oklch(0.75 0.08 60);
+  /* Updated to use MahaOne brand colors with proper contrast */
+  /* MahaOne Brand Colors:
+     Deep Teal: #1C3F3A
+     Warm Sand: #C2C5AA
+     Terracotta: #D4745E
+     Soft Cream: #F5F3E7
+  */
+  --background: 45 33% 96%; /* Soft Cream #F5F3E7 */
+  --foreground: 172 37% 18%; /* Deep Teal #1C3F3A */
+
+  --card: 0 0% 100%; /* White for cards */
+  --card-foreground: 172 37% 18%; /* Deep Teal text */
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 172 37% 18%;
+
+  --primary: 172 37% 18%; /* Deep Teal #1C3F3A */
+  --primary-foreground: 45 33% 96%; /* Soft Cream text on primary */
+
+  --secondary: 47 31% 72%; /* Warm Sand #C2C5AA */
+  --secondary-foreground: 172 37% 18%; /* Deep Teal text on secondary */
+
+  --muted: 47 31% 88%; /* Lighter Warm Sand */
+  --muted-foreground: 172 37% 28%; /* Slightly lighter Deep Teal */
+
+  --accent: 13 60% 60%; /* Terracotta #D4745E */
+  --accent-foreground: 0 0% 100%; /* White text on accent */
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 47 31% 82%; /* Warm Sand border */
+  --input: 47 31% 82%;
+  --ring: 172 37% 18%; /* Deep Teal focus ring */
+
+  --chart-1: 172 37% 18%; /* Deep Teal */
+  --chart-2: 47 31% 72%; /* Warm Sand */
+  --chart-3: 13 60% 60%; /* Terracotta */
+  --chart-4: 45 33% 96%; /* Soft Cream */
+  --chart-5: 172 37% 35%; /* Lighter Teal */
+
   --radius: 0.75rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.25 0.05 180);
-  --sidebar-primary: oklch(0.45 0.08 195);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.96 0.01 240);
-  --sidebar-accent-foreground: oklch(0.25 0.05 180);
-  --sidebar-border: oklch(0.92 0.01 240);
-  --sidebar-ring: oklch(0.45 0.08 195);
+  --sidebar: oklch(0.985 0 0); /* This block was not updated in the provided change */
+  --sidebar-foreground: oklch(0.25 0.05 180); /* This block was not updated in the provided change */
+  --sidebar-primary: oklch(0.45 0.08 195); /* This block was not updated in the provided change */
+  --sidebar-primary-foreground: oklch(0.985 0 0); /* This block was not updated in the provided change */
+  --sidebar-accent: oklch(0.96 0.01 240); /* This block was not updated in the provided change */
+  --sidebar-accent-foreground: oklch(0.25 0.05 180); /* This block was not updated in the provided change */
+  --sidebar-border: oklch(0.92 0.01 240); /* This block was not updated in the provided change */
+  --sidebar-ring: oklch(0.45 0.08 195); /* This block was not updated in the provided change */
 }
 
 .dark {
-  --background: oklch(0.25 0.05 180);
-  --foreground: oklch(0.97 0.01 60);
-  --card: oklch(0.28 0.05 180);
-  --card-foreground: oklch(0.97 0.01 60);
-  --popover: oklch(0.28 0.05 180);
-  --popover-foreground: oklch(0.97 0.01 60);
-  --primary: oklch(0.55 0.08 195);
-  --primary-foreground: oklch(0.25 0.05 180);
-  --secondary: oklch(0.78 0.12 42);
-  --secondary-foreground: oklch(0.25 0.05 180);
-  --muted: oklch(0.32 0.05 180);
-  --muted-foreground: oklch(0.65 0.02 240);
-  --accent: oklch(0.72 0.15 25);
-  --accent-foreground: oklch(0.25 0.05 180);
-  --destructive: oklch(0.55 0.18 25);
-  --destructive-foreground: oklch(0.97 0.01 60);
-  --border: oklch(0.32 0.05 180);
-  --input: oklch(0.32 0.05 180);
-  --ring: oklch(0.55 0.08 195);
-  --chart-1: oklch(0.55 0.08 195);
-  --chart-2: oklch(0.78 0.12 42);
-  --chart-3: oklch(0.72 0.15 25);
-  --chart-4: oklch(0.6 0.08 180);
-  --chart-5: oklch(0.8 0.08 60);
-  --sidebar: oklch(0.22 0.05 180);
-  --sidebar-foreground: oklch(0.97 0.01 60);
-  --sidebar-primary: oklch(0.55 0.08 195);
-  --sidebar-primary-foreground: oklch(0.97 0.01 60);
-  --sidebar-accent: oklch(0.32 0.05 180);
-  --sidebar-accent-foreground: oklch(0.97 0.01 60);
-  --sidebar-border: oklch(0.32 0.05 180);
-  --sidebar-ring: oklch(0.55 0.08 195);
+  /* Dark mode with MahaOne colors */
+  --background: 172 37% 12%; /* Darker Deep Teal */
+  --foreground: 45 33% 96%; /* Soft Cream */
+
+  --card: 172 37% 15%; /* Slightly lighter than background */
+  --card-foreground: 45 33% 96%;
+
+  --popover: 172 37% 15%;
+  --popover-foreground: 45 33% 96%;
+
+  --primary: 47 31% 72%; /* Warm Sand in dark mode */
+  --primary-foreground: 172 37% 12%;
+
+  --secondary: 172 37% 25%; /* Lighter Deep Teal */
+  --secondary-foreground: 45 33% 96%;
+
+  --muted: 172 37% 20%;
+  --muted-foreground: 47 31% 72%;
+
+  --accent: 13 60% 60%; /* Terracotta */
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 172 37% 25%;
+  --input: 172 37% 25%;
+  --ring: 47 31% 72%;
+  --chart-1: oklch(0.55 0.08 195); /* This block was not updated in the provided change */
+  --chart-2: oklch(0.78 0.12 42); /* This block was not updated in the provided change */
+  --chart-3: oklch(0.72 0.15 25); /* This block was not updated in the provided change */
+  --chart-4: oklch(0.6 0.08 180); /* This block was not updated in the provided change */
+  --chart-5: oklch(0.8 0.08 60); /* This block was not updated in the provided change */
+  --sidebar: oklch(0.22 0.05 180); /* This block was not updated in the provided change */
+  --sidebar-foreground: oklch(0.97 0.01 60); /* This block was not updated in the provided change */
+  --sidebar-primary: oklch(0.55 0.08 195); /* This block was not updated in the provided change */
+  --sidebar-primary-foreground: oklch(0.97 0.01 60); /* This block was not updated in the provided change */
+  --sidebar-accent: oklch(0.32 0.05 180); /* This block was not updated in the provided change */
+  --sidebar-accent-foreground: oklch(0.97 0.01 60); /* This block was not updated in the provided change */
+  --sidebar-border: oklch(0.32 0.05 180); /* This block was not updated in the provided change */
+  --sidebar-ring: oklch(0.55 0.08 195); /* This block was not updated in the provided change */
 }
 
 @theme inline {
