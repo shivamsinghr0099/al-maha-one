@@ -690,36 +690,38 @@ export default function SuperAdminDashboard() {
       : tenantServices.filter((service) => service.category === selectedServiceCategory)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pearl via-pearl-light to-stone-light">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-stone/20 sticky top-0 z-50">
+      <header className="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <MahaLogo size="md" variant="primary" showText={true} />
-              <div className="h-6 w-px bg-stone/30"></div>
+              <div className="h-6 w-px bg-border"></div>
               <div>
-                <h1 className="text-xl font-bold text-teal font-serif">Super Admin</h1>
-                <p className="text-xs text-teal/60">Complete System Control</p>
+                <h1 className="text-xl font-bold text-foreground font-serif">Super Admin</h1>
+                <p className="text-xs text-muted-foreground">Complete System Control</p>
               </div>
             </div>
 
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm" className="relative">
-                <Bell className="h-5 w-5 text-teal" />
+                <Bell className="h-5 w-5 text-foreground" />
                 <span className="absolute -top-1 -right-1 h-4 w-4 bg-coral rounded-full text-xs text-white flex items-center justify-center">
                   25
                 </span>
               </Button>
 
               <div className="flex items-center space-x-3">
-                <Avatar className="ring-2 ring-coral/20">
+                <Avatar className="ring-2 ring-primary/20">
                   <AvatarImage src="/placeholder.svg?height=32&width=32&text=SA" alt="Super Admin" />
-                  <AvatarFallback className="bg-gradient-to-br from-coral to-coral-dark text-white">SA</AvatarFallback>
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary-dark text-white">
+                    SA
+                  </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium text-teal">Omar Al Rashid</p>
-                  <p className="text-xs text-teal/60">Super Administrator</p>
+                  <p className="text-sm font-medium text-foreground">Omar Al Rashid</p>
+                  <p className="text-xs text-muted-foreground">Super Administrator</p>
                 </div>
               </div>
             </div>
@@ -730,8 +732,8 @@ export default function SuperAdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-teal mb-2 font-serif">Complete MPOP Control Center 🎯</h1>
-          <p className="text-teal/70">
+          <h1 className="text-3xl font-bold text-foreground mb-2 font-serif">Complete MPOP Control Center 🎯</h1>
+          <p className="text-muted-foreground">
             Access all tenant, building manager, and landlord features plus system oversight
           </p>
         </div>
@@ -741,27 +743,17 @@ export default function SuperAdminDashboard() {
           {systemStats.map((stat, index) => (
             <Card
               key={index}
-              className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm"
+              className="border border-border shadow-lg hover:shadow-xl transition-all duration-300 bg-card"
             >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-teal/70">{stat.title}</p>
-                    <p className="text-2xl font-bold text-teal">{stat.value}</p>
-                    <p
-                      className={`text-xs ${
-                        stat.trend === "up"
-                          ? "text-emerald-600"
-                          : stat.trend === "excellent"
-                            ? "text-emerald-600"
-                            : "text-teal/60"
-                      }`}
-                    >
-                      {stat.change}
-                    </p>
+                    <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                    <p className="text-2xl font-bold text-foreground mt-1">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{stat.change}</p>
                   </div>
-                  <div className={`p-3 rounded-xl ${stat.bgColor}`}>
-                    <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                  <div className="p-3 rounded-xl bg-primary/10">
+                    <stat.icon className="h-6 w-6 text-primary" />
                   </div>
                 </div>
               </CardContent>
@@ -771,49 +763,76 @@ export default function SuperAdminDashboard() {
 
         {isLoading && (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         )}
 
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-coral/10 border border-coral/30">
-            <p className="text-sm text-coral text-center">{error}</p>
+          <div className="mb-6 p-4 rounded-lg bg-destructive/10 border border-destructive">
+            <p className="text-sm text-destructive text-center">{error}</p>
           </div>
         )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-10 bg-white/80 backdrop-blur-sm text-xs">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+          <TabsList className="grid w-full grid-cols-10 bg-card border border-border text-xs">
+            <TabsTrigger
+              value="overview"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+            >
               Overview
             </TabsTrigger>
             <TabsTrigger
               value="tenant-services"
-              className="data-[state=active]:bg-coral data-[state=active]:text-white"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
             >
               Tenant Services
             </TabsTrigger>
-            <TabsTrigger value="building-ops" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="building-ops"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+            >
               Building Ops
             </TabsTrigger>
-            <TabsTrigger value="landlord-tools" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="landlord-tools"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+            >
               Landlord Tools
             </TabsTrigger>
-            <TabsTrigger value="financial" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="financial"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+            >
               Financial
             </TabsTrigger>
-            <TabsTrigger value="approvals" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="approvals"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+            >
               Approvals
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="analytics"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+            >
               Analytics
             </TabsTrigger>
-            <TabsTrigger value="emergency" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="emergency"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+            >
               Emergency
             </TabsTrigger>
-            <TabsTrigger value="domains" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="domains"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+            >
               Domains
             </TabsTrigger>
-            <TabsTrigger value="reports" className="data-[state=active]:bg-coral data-[state=active]:text-white">
+            <TabsTrigger
+              value="reports"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+            >
               Reports
             </TabsTrigger>
           </TabsList>
@@ -822,30 +841,30 @@ export default function SuperAdminDashboard() {
           <TabsContent value="overview" className="space-y-6">
             <div className="grid lg:grid-cols-3 gap-8">
               {/* System Health */}
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card className="border border-border shadow-lg bg-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-teal font-serif">
-                    <Activity className="h-5 w-5 text-emerald-600" />
+                  <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
+                    <Activity className="h-5 w-5 text-primary" />
                     <span>System Health</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-teal/70">Server Uptime</span>
-                      <span className="font-bold text-emerald-600">99.8%</span>
+                      <span className="text-sm text-muted-foreground">Server Uptime</span>
+                      <span className="font-bold text-foreground">99.8%</span>
                     </div>
                     <Progress value={99.8} className="h-2" />
 
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-teal/70">Active Users</span>
-                      <span className="font-bold text-emerald-600">1,247</span>
+                      <span className="text-sm text-muted-foreground">Active Users</span>
+                      <span className="font-bold text-foreground">1,247</span>
                     </div>
                     <Progress value={85} className="h-2" />
 
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-teal/70">System Load</span>
-                      <span className="font-bold text-emerald-600">Normal</span>
+                      <span className="text-sm text-muted-foreground">System Load</span>
+                      <span className="font-bold text-foreground">Normal</span>
                     </div>
                     <Progress value={65} className="h-2" />
                   </div>
@@ -853,10 +872,10 @@ export default function SuperAdminDashboard() {
               </Card>
 
               {/* Quick Actions */}
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card className="border border-border shadow-lg bg-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-teal font-serif">
-                    <Settings className="h-5 w-5 text-gold" />
+                  <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
+                    <Settings className="h-5 w-5 text-accent" />
                     <span>Quick Actions</span>
                   </CardTitle>
                 </CardHeader>
@@ -864,23 +883,23 @@ export default function SuperAdminDashboard() {
                   <div className="grid grid-cols-2 gap-3">
                     <Button
                       onClick={() => setShowAddPropertyModal(true)}
-                      className="h-auto p-3 flex-col space-y-1 bg-gradient-to-br from-teal/10 to-teal/20 text-teal hover:from-teal/20 hover:to-teal/30 border-0 text-xs"
+                      className="h-auto p-3 flex-col space-y-1 bg-primary/10 text-primary hover:bg-primary/20 border-0 text-xs"
                     >
                       <Building className="h-5 w-5" />
                       <span>Add Property</span>
                     </Button>
                     <Button
                       onClick={() => setShowAddManagerModal(true)}
-                      className="h-auto p-3 flex-col space-y-1 bg-gradient-to-br from-gold/10 to-gold/20 text-gold hover:from-gold/20 hover:to-gold/30 border-0 text-xs"
+                      className="h-auto p-3 flex-col space-y-1 bg-accent/10 text-accent hover:bg-accent/20 border-0 text-xs"
                     >
                       <UserPlus className="h-5 w-5" />
                       <span>Add Manager</span>
                     </Button>
-                    <Button className="h-auto p-3 flex-col space-y-1 bg-gradient-to-br from-coral/10 to-coral/20 text-coral hover:from-coral/20 hover:to-coral/30 border-0 text-xs">
+                    <Button className="h-auto p-3 flex-col space-y-1 bg-secondary/10 text-secondary hover:bg-secondary/20 border-0 text-xs">
                       <Database className="h-5 w-5" />
                       <span>Backup</span>
                     </Button>
-                    <Button className="h-auto p-3 flex-col space-y-1 bg-gradient-to-br from-stone/10 to-stone/20 text-stone hover:from-stone/20 hover:to-stone/30 border-0 text-xs">
+                    <Button className="h-auto p-3 flex-col space-y-1 bg-muted text-foreground hover:bg-muted/80 border-0 text-xs">
                       <FileText className="h-5 w-5" />
                       <span>Reports</span>
                     </Button>
@@ -889,34 +908,34 @@ export default function SuperAdminDashboard() {
               </Card>
 
               {/* Recent Activities */}
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card className="border border-border shadow-lg bg-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-teal font-serif">
-                    <Clock className="h-5 w-5 text-blue-600" />
+                  <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
+                    <Clock className="h-5 w-5 text-primary" />
                     <span>Recent Activities</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3 p-2 bg-green-50 rounded-lg">
-                      <CheckCircle className="h-4 w-4 text-green-600" />
+                    <div className="flex items-center space-x-3 p-2 bg-primary/10 rounded-lg">
+                      <CheckCircle className="h-4 w-4 text-primary" />
                       <div>
-                        <p className="text-xs font-medium text-teal">Maintenance Approved</p>
-                        <p className="text-xs text-teal/60">Azure Gardens - AC Repair</p>
+                        <p className="text-xs font-medium text-foreground">Maintenance Approved</p>
+                        <p className="text-xs text-muted-foreground">Azure Gardens - AC Repair</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3 p-2 bg-yellow-50 rounded-lg">
-                      <Clock className="h-4 w-4 text-yellow-600" />
+                    <div className="flex items-center space-x-3 p-2 bg-accent/10 rounded-lg">
+                      <Clock className="h-4 w-4 text-accent" />
                       <div>
-                        <p className="text-xs font-medium text-teal">Payment Overdue</p>
-                        <p className="text-xs text-teal/60">Pearl Towers - Unit B-304</p>
+                        <p className="text-xs font-medium text-foreground">Payment Overdue</p>
+                        <p className="text-xs text-muted-foreground">Pearl Towers - Unit B-304</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3 p-2 bg-blue-50 rounded-lg">
-                      <UserCheck className="h-4 w-4 text-blue-600" />
+                    <div className="flex items-center space-x-3 p-2 bg-secondary/10 rounded-lg">
+                      <UserCheck className="h-4 w-4 text-secondary" />
                       <div>
-                        <p className="text-xs font-medium text-teal">New Tenant Added</p>
-                        <p className="text-xs text-teal/60">Marina Heights - Unit C-205</p>
+                        <p className="text-xs font-medium text-foreground">New Tenant Added</p>
+                        <p className="text-xs text-muted-foreground">Marina Heights - Unit C-205</p>
                       </div>
                     </div>
                   </div>
@@ -925,25 +944,25 @@ export default function SuperAdminDashboard() {
             </div>
 
             {/* Financial Overview */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border shadow-lg bg-card">
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-teal font-serif">
-                  <DollarSign className="h-5 w-5 text-green-600" />
+                <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
+                  <DollarSign className="h-5 w-5 text-primary" />
                   <span>Financial Overview</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {financialOverview.map((item, index) => (
-                    <div key={index} className="text-center p-4 bg-gradient-to-br from-white to-gray-50 rounded-xl">
+                    <div key={index} className="text-center p-4 bg-card rounded-xl">
                       <div
-                        className={`w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center bg-gradient-to-br ${item.color === "text-green-600" ? "from-green-100 to-green-200" : item.color === "text-red-600" ? "from-red-100 to-red-200" : item.color === "text-blue-600" ? "from-blue-100 to-blue-200" : "from-purple-100 to-purple-200"}`}
+                        className={`w-12 h-12 mx-auto mb-3 rounded-xl flex items-center justify-center bg-primary/10`}
                       >
-                        <item.icon className={`h-6 w-6 ${item.color}`} />
+                        <item.icon className={`h-6 w-6 text-primary`} />
                       </div>
-                      <p className="text-lg font-bold text-teal">{item.value}</p>
-                      <p className="text-sm text-teal/70">{item.title}</p>
-                      <p className={`text-xs ${item.trend === "up" ? "text-green-600" : "text-red-600"}`}>
+                      <p className="text-lg font-bold text-foreground">{item.value}</p>
+                      <p className="text-sm text-muted-foreground">{item.title}</p>
+                      <p className={`text-xs ${item.trend === "up" ? "text-green-500" : "text-red-500"}`}>
                         {item.change}
                       </p>
                     </div>
@@ -956,7 +975,7 @@ export default function SuperAdminDashboard() {
           {/* Tenant Services Tab - All tenant features */}
           <TabsContent value="tenant-services" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-teal font-serif">Complete Tenant Services</h2>
+              <h2 className="text-2xl font-semibold text-foreground font-serif">Complete Tenant Services</h2>
               <div className="flex space-x-2">
                 <Select value={selectedServiceCategory} onValueChange={setSelectedServiceCategory}>
                   <SelectTrigger className="w-40">
@@ -980,10 +999,10 @@ export default function SuperAdminDashboard() {
               {filteredServices.map((service) => (
                 <Card
                   key={service.id}
-                  className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${service.bgColor} backdrop-blur-sm overflow-hidden relative group`}
+                  className={`border border-border shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${service.bgColor} overflow-hidden relative group`}
                   onClick={() => (window.location.href = service.route)}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-white/30 group-hover:from-white/70 group-hover:to-white/40 transition-all duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 group-hover:from-primary/15 group-hover:to-primary/10 transition-all duration-300"></div>
 
                   <CardContent className="relative p-6 text-center h-full flex flex-col justify-center">
                     <div
@@ -991,9 +1010,9 @@ export default function SuperAdminDashboard() {
                     >
                       <service.icon className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="font-semibold text-teal text-lg mb-2">{service.title}</h3>
-                    <p className="text-sm text-teal/70 leading-relaxed">{service.description}</p>
-                    <Badge className="mt-3 mx-auto bg-white/80 text-teal">{service.category}</Badge>
+                    <h3 className="font-semibold text-foreground text-lg mb-2">{service.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
+                    <Badge className="mt-3 mx-auto bg-primary/10 text-primary">{service.category}</Badge>
                   </CardContent>
                 </Card>
               ))}
@@ -1003,15 +1022,15 @@ export default function SuperAdminDashboard() {
           {/* Building Operations Tab - All building manager features */}
           <TabsContent value="building-ops" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-teal font-serif">Building Operations Management</h2>
-              <Badge className="bg-teal/10 text-teal">All Building Manager Features</Badge>
+              <h2 className="text-2xl font-semibold text-foreground font-serif">Building Operations Management</h2>
+              <Badge className="bg-primary/10 text-primary">All Building Manager Features</Badge>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {buildingManagerTools.map((tool) => (
                 <Card
                   key={tool.id}
-                  className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm cursor-pointer"
+                  className="border border-border shadow-lg hover:shadow-xl transition-all duration-300 bg-card cursor-pointer"
                 >
                   <CardContent className="p-6 text-center">
                     <div
@@ -1019,34 +1038,34 @@ export default function SuperAdminDashboard() {
                     >
                       <tool.icon className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="font-semibold text-teal text-lg mb-2">{tool.title}</h3>
-                    <p className="text-sm text-teal/70 mb-3">{tool.description}</p>
-                    <Badge className="bg-teal/10 text-teal">{tool.count}</Badge>
+                    <h3 className="font-semibold text-foreground text-lg mb-2">{tool.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{tool.description}</p>
+                    <Badge className="bg-primary/10 text-primary">{tool.count}</Badge>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
             {/* Building Manager Quick Actions */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border shadow-lg bg-card">
               <CardHeader>
-                <CardTitle className="text-teal font-serif">Building Management Actions</CardTitle>
+                <CardTitle className="text-foreground font-serif">Building Management Actions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-teal/10 to-teal/20 text-teal hover:from-teal/20 hover:to-teal/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-primary/10 text-primary hover:bg-primary/20 border-0">
                     <UserPlus className="h-6 w-6" />
                     <span className="text-sm">Add Tenant</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-orange/10 to-orange/20 text-orange hover:from-orange/20 hover:to-orange/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-accent/10 text-accent hover:bg-accent/20 border-0">
                     <Wrench className="h-6 w-6" />
                     <span className="text-sm">Schedule Service</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-gold/10 to-gold/20 text-gold hover:from-gold/20 hover:to-gold/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-secondary/10 text-secondary hover:bg-secondary/20 border-0">
                     <Truck className="h-6 w-6" />
                     <span className="text-sm">Add Vendor</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-red/10 to-red/20 text-red hover:from-red/20 hover:to-red/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-destructive/10 text-destructive hover:bg-destructive/20 border-0">
                     <Phone className="h-6 w-6" />
                     <span className="text-sm">Emergency</span>
                   </Button>
@@ -1058,15 +1077,15 @@ export default function SuperAdminDashboard() {
           {/* Landlord Tools Tab - All landlord features */}
           <TabsContent value="landlord-tools" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-teal font-serif">Landlord Management Tools</h2>
-              <Badge className="bg-blue-100 text-blue-800">All Landlord Features</Badge>
+              <h2 className="text-2xl font-semibold text-foreground font-serif">Landlord Management Tools</h2>
+              <Badge className="bg-primary/10 text-primary">All Landlord Features</Badge>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {landlordTools.map((tool) => (
                 <Card
                   key={tool.id}
-                  className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm cursor-pointer"
+                  className="border border-border shadow-lg hover:shadow-xl transition-all duration-300 bg-card cursor-pointer"
                 >
                   <CardContent className="p-6 text-center">
                     <div
@@ -1074,34 +1093,34 @@ export default function SuperAdminDashboard() {
                     >
                       <tool.icon className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="font-semibold text-teal text-lg mb-2">{tool.title}</h3>
-                    <p className="text-sm text-teal/70 mb-3">{tool.description}</p>
-                    <Badge className="bg-blue-100 text-blue-800">{tool.count}</Badge>
+                    <h3 className="font-semibold text-foreground text-lg mb-2">{tool.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{tool.description}</p>
+                    <Badge className="bg-primary/10 text-primary">{tool.count}</Badge>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
             {/* Landlord Quick Actions */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border shadow-lg bg-card">
               <CardHeader>
-                <CardTitle className="text-teal font-serif">Landlord Management Actions</CardTitle>
+                <CardTitle className="text-foreground font-serif">Landlord Management Actions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-blue/10 to-blue/20 text-blue hover:from-blue/20 hover:to-blue/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-primary/10 text-primary hover:bg-primary/20 border-0">
                     <Building className="h-6 w-6" />
                     <span className="text-sm">Add Property</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-green/10 to-green/20 text-green hover:from-green/20 hover:to-green/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-green-500/10 text-green-500 hover:bg-green-500/20 border-0">
                     <DollarSign className="h-6 w-6" />
                     <span className="text-sm">Collect Rent</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-purple/10 to-purple/20 text-purple hover:from-purple/20 hover:to-purple/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-purple-500/10 text-purple-500 hover:bg-purple-500/20 border-0">
                     <UserCheck className="h-6 w-6" />
                     <span className="text-sm">Screen Tenant</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-indigo/10 to-indigo/20 text-indigo hover:from-indigo/20 hover:to-indigo/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500/20 border-0">
                     <BarChart3 className="h-6 w-6" />
                     <span className="text-sm">View Analytics</span>
                   </Button>
@@ -1113,23 +1132,23 @@ export default function SuperAdminDashboard() {
           {/* Financial Management Tab */}
           <TabsContent value="financial" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-teal font-serif">Complete Financial Management</h2>
+              <h2 className="text-2xl font-semibold text-foreground font-serif">Complete Financial Management</h2>
               <div className="flex space-x-2">
-                <Badge className="bg-green-100 text-green-800">Revenue: AED 2.1M</Badge>
-                <Badge className="bg-red-100 text-red-800">Outstanding: AED 145K</Badge>
+                <Badge className="bg-green-500/10 text-green-500">Revenue: AED 2.1M</Badge>
+                <Badge className="bg-red-500/10 text-red-500">Outstanding: AED 145K</Badge>
               </div>
             </div>
 
             {/* Financial Overview Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {financialOverview.map((item, index) => (
-                <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <Card key={index} className="border border-border shadow-lg bg-card">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-teal/70">{item.title}</p>
-                        <p className="text-xl font-bold text-teal">{item.value}</p>
-                        <p className={`text-xs ${item.trend === "up" ? "text-emerald-600" : "text-red-600"}`}>
+                        <p className="text-sm font-medium text-muted-foreground">{item.title}</p>
+                        <p className="text-xl font-bold text-foreground">{item.value}</p>
+                        <p className={`text-xs ${item.trend === "up" ? "text-green-500" : "text-red-500"}`}>
                           {item.change}
                         </p>
                       </div>
@@ -1145,25 +1164,25 @@ export default function SuperAdminDashboard() {
             </div>
 
             {/* Financial Actions */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border shadow-lg bg-card">
               <CardHeader>
-                <CardTitle className="text-teal font-serif">Financial Operations</CardTitle>
+                <CardTitle className="text-foreground font-serif">Financial Operations</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-green/10 to-green/20 text-green hover:from-green/20 hover:to-green/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-green-500/10 text-green-500 hover:bg-green-500/20 border-0">
                     <DollarSign className="h-6 w-6" />
                     <span className="text-sm">Process Payments</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-red/10 to-red/20 text-red hover:from-red/20 hover:to-red/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 border-0">
                     <AlertTriangle className="h-6 w-6" />
                     <span className="text-sm">Overdue Notices</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-blue/10 to-blue/20 text-blue hover:from-blue/20 hover:to-blue/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-primary/10 text-primary hover:bg-primary/20 border-0">
                     <BarChart3 className="h-6 w-6" />
                     <span className="text-sm">Financial Reports</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-purple/10 to-purple/20 text-purple hover:from-purple/20 hover:to-purple/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-purple-500/10 text-purple-500 hover:bg-purple-500/20 border-0">
                     <FileText className="h-6 w-6" />
                     <span className="text-sm">Generate Invoice</span>
                   </Button>
@@ -1175,22 +1194,22 @@ export default function SuperAdminDashboard() {
           {/* Emergency Management Tab */}
           <TabsContent value="emergency" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-teal font-serif">Emergency Management Center</h2>
-              <Badge className="bg-red-100 text-red-800">2 Active Emergencies</Badge>
+              <h2 className="text-2xl font-semibold text-foreground font-serif">Emergency Management Center</h2>
+              <Badge className="bg-destructive/10 text-destructive">2 Active Emergencies</Badge>
             </div>
 
             {/* Emergency Contacts */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {emergencyTools.map((contact, index) => (
-                <Card key={index} className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+                <Card key={index} className="border border-border shadow-lg bg-card">
                   <CardContent className="p-4 text-center">
                     <div
                       className={`w-12 h-12 ${contact.color} rounded-xl mx-auto mb-3 flex items-center justify-center`}
                     >
                       <contact.icon className="h-6 w-6 text-white" />
                     </div>
-                    <h4 className="font-semibold text-teal text-sm">{contact.title}</h4>
-                    <p className="text-lg font-bold text-teal">{contact.contact}</p>
+                    <h4 className="font-semibold text-foreground text-sm">{contact.title}</h4>
+                    <p className="text-lg font-bold text-foreground">{contact.contact}</p>
                     <Button size="sm" className="mt-2 w-full">
                       <Phone className="h-4 w-4 mr-2" />
                       Call Now
@@ -1201,25 +1220,25 @@ export default function SuperAdminDashboard() {
             </div>
 
             {/* Emergency Actions */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border shadow-lg bg-card">
               <CardHeader>
-                <CardTitle className="text-teal font-serif">Emergency Response Actions</CardTitle>
+                <CardTitle className="text-foreground font-serif">Emergency Response Actions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-red/10 to-red/20 text-red hover:from-red/20 hover:to-red/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-destructive/10 text-destructive hover:bg-destructive/20 border-0">
                     <AlertTriangle className="h-6 w-6" />
                     <span className="text-sm">Declare Emergency</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-orange/10 to-orange/20 text-orange hover:from-orange/20 hover:to-orange/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 border-0">
                     <Bell className="h-6 w-6" />
                     <span className="text-sm">Send Alert</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-blue/10 to-blue/20 text-blue hover:from-blue/20 hover:to-blue/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-primary/10 text-primary hover:bg-primary/20 border-0">
                     <Phone className="h-6 w-6" />
                     <span className="text-sm">Contact Security</span>
                   </Button>
-                  <Button className="h-auto p-4 flex-col space-y-2 bg-gradient-to-br from-green/10 to-green/20 text-green hover:from-green/20 hover:to-green/30 border-0">
+                  <Button className="h-auto p-4 flex-col space-y-2 bg-green-500/10 text-green-500 hover:bg-green-500/20 border-0">
                     <CheckCircle className="h-6 w-6" />
                     <span className="text-sm">All Clear</span>
                   </Button>
@@ -1228,16 +1247,16 @@ export default function SuperAdminDashboard() {
             </Card>
           </TabsContent>
 
-          {/* Keep existing approvals, system, analytics, and reports tabs */}
+          {/* Approvals, System, Analytics, and Reports Tabs */}
           <TabsContent value="approvals" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-teal font-serif">Approval Management</h2>
-              <Badge className="bg-coral/10 text-coral">18 Pending Approvals</Badge>
+              <h2 className="text-2xl font-semibold text-foreground font-serif">Approval Management</h2>
+              <Badge className="bg-destructive/10 text-destructive">18 Pending Approvals</Badge>
             </div>
 
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border shadow-lg bg-card">
               <CardContent className="p-6">
-                <p className="text-teal/70 text-center py-8">
+                <p className="text-muted-foreground text-center py-8">
                   Comprehensive approval system for all tenant requests, building modifications, and system changes.
                 </p>
               </CardContent>
@@ -1246,13 +1265,13 @@ export default function SuperAdminDashboard() {
 
           <TabsContent value="analytics" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-teal font-serif">Analytics & Insights</h2>
-              <Badge className="bg-blue-100 text-blue-800">Real-time Data</Badge>
+              <h2 className="text-2xl font-semibold text-foreground font-serif">Analytics & Insights</h2>
+              <Badge className="bg-primary/10 text-primary">Real-time Data</Badge>
             </div>
 
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border shadow-lg bg-card">
               <CardContent className="p-6">
-                <p className="text-teal/70 text-center py-8">
+                <p className="text-muted-foreground text-center py-8">
                   Comprehensive analytics dashboard with property performance, tenant satisfaction, and financial
                   insights.
                 </p>
@@ -1262,51 +1281,51 @@ export default function SuperAdminDashboard() {
 
           <TabsContent value="system" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-teal font-serif">System Administration</h2>
-              <Badge className="bg-emerald-100 text-emerald-800">All Systems Operational</Badge>
+              <h2 className="text-2xl font-semibold text-foreground font-serif">System Administration</h2>
+              <Badge className="bg-green-500/10 text-green-500">All Systems Operational</Badge>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card className="border border-border shadow-lg bg-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-teal font-serif">
-                    <Database className="h-5 w-5 text-blue-600" />
+                  <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
+                    <Database className="h-5 w-5 text-primary" />
                     <span>Database Management</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-teal/70">Database Size</span>
-                    <span className="font-bold text-teal">2.4 GB</span>
+                    <span className="text-sm text-muted-foreground">Database Size</span>
+                    <span className="font-bold text-foreground">2.4 GB</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-teal/70">Last Backup</span>
-                    <span className="font-bold text-teal">2024-01-20 02:00</span>
+                    <span className="text-sm text-muted-foreground">Last Backup</span>
+                    <span className="font-bold text-foreground">2024-01-20 02:00</span>
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                  <Button className="w-full bg-gradient-to-r from-primary to-primary-dark text-white">
                     <Database className="h-4 w-4 mr-2" />
                     Create Backup
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <Card className="border border-border shadow-lg bg-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-teal font-serif">
-                    <Lock className="h-5 w-5 text-red-600" />
+                  <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
+                    <Lock className="h-5 w-5 text-destructive" />
                     <span>Security Settings</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-teal/70">SSL Certificate</span>
-                    <Badge className="bg-green-100 text-green-800">Valid</Badge>
+                    <span className="text-sm text-muted-foreground">SSL Certificate</span>
+                    <Badge className="bg-green-500/10 text-green-500">Valid</Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-teal/70">Firewall Status</span>
-                    <Badge className="bg-green-100 text-green-800">Active</Badge>
+                    <span className="text-sm text-muted-foreground">Firewall Status</span>
+                    <Badge className="bg-green-500/10 text-green-500">Active</Badge>
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white">
+                  <Button className="w-full bg-gradient-to-r from-destructive to-destructive-dark text-white">
                     <Lock className="h-4 w-4 mr-2" />
                     Security Scan
                   </Button>
@@ -1317,16 +1336,16 @@ export default function SuperAdminDashboard() {
 
           <TabsContent value="reports" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-teal font-serif">Reports & Documentation</h2>
-              <Button className="bg-gradient-to-r from-coral to-coral-dark text-white">
+              <h2 className="text-2xl font-semibold text-foreground font-serif">Reports & Documentation</h2>
+              <Button className="bg-gradient-to-r from-primary to-primary-dark text-white">
                 <FileText className="h-4 w-4 mr-2" />
                 Generate Report
               </Button>
             </div>
 
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border shadow-lg bg-card">
               <CardContent className="p-6">
-                <p className="text-teal/70 text-center py-8">
+                <p className="text-muted-foreground text-center py-8">
                   Comprehensive reporting system for all aspects of property management, financial performance, and
                   system usage.
                 </p>
@@ -1337,21 +1356,24 @@ export default function SuperAdminDashboard() {
           <TabsContent value="domains" className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-semibold text-teal font-serif">Domain & List Management</h2>
-                <p className="text-sm text-teal/70 mt-1">
+                <h2 className="text-2xl font-semibold text-foreground font-serif">Domain & List Management</h2>
+                <p className="text-sm text-muted-foreground mt-1">
                   Manage all system master data: languages, currencies, locations, and property configurations
                 </p>
               </div>
-              <Button onClick={handleAddDomainItem} className="bg-gradient-to-r from-coral to-coral-dark text-white">
+              <Button
+                onClick={handleAddDomainItem}
+                className="bg-gradient-to-r from-primary to-primary-dark text-white"
+              >
                 <UserPlus className="h-4 w-4 mr-2" />
                 Add New
               </Button>
             </div>
 
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border border-border shadow-lg bg-card">
               <CardContent className="p-6">
                 <Tabs value={activeDomainTab} onValueChange={setActiveDomainTab}>
-                  <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 bg-stone/10">
+                  <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 bg-muted">
                     <TabsTrigger value="languages" className="text-xs">
                       Languages
                     </TabsTrigger>
@@ -1391,66 +1413,68 @@ export default function SuperAdminDashboard() {
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
-                          <tr className="border-b border-stone/20">
-                            <th className="text-left py-3 px-4 text-sm font-semibold text-teal">ID</th>
-                            <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Name</th>
+                          <tr className="border-b border-border">
+                            <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">ID</th>
+                            <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Name</th>
                             {activeDomainTab === "currencies" && (
                               <>
-                                <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Code</th>
-                                <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Symbol</th>
+                                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Code</th>
+                                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Symbol</th>
                               </>
                             )}
                             {activeDomainTab === "languages" && (
-                              <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Code</th>
+                              <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Code</th>
                             )}
                             {activeDomainTab === "timezones" && (
                               <>
-                                <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Code</th>
-                                <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Offset</th>
+                                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Code</th>
+                                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Offset</th>
                               </>
                             )}
                             {activeDomainTab === "countries" && (
-                              <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Code</th>
+                              <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Code</th>
                             )}
                             {(activeDomainTab === "property-types" || activeDomainTab === "amenities") && (
-                              <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Description</th>
+                              <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Description</th>
                             )}
-                            <th className="text-left py-3 px-4 text-sm font-semibold text-teal">Status</th>
-                            <th className="text-right py-3 px-4 text-sm font-semibold text-teal">Actions</th>
+                            <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Status</th>
+                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                           {getDomainData()
                             .filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
                             .map((item) => (
-                              <tr key={item.id} className="border-b border-stone/10 hover:bg-stone/5">
-                                <td className="py-3 px-4 text-sm text-teal">{item.id}</td>
-                                <td className="py-3 px-4 text-sm text-teal font-medium">{item.name}</td>
+                              <tr key={item.id} className="border-b border-border hover:bg-accent/5">
+                                <td className="py-3 px-4 text-sm text-foreground">{item.id}</td>
+                                <td className="py-3 px-4 text-sm text-foreground font-medium">{item.name}</td>
                                 {activeDomainTab === "currencies" && (
                                   <>
-                                    <td className="py-3 px-4 text-sm text-teal">{item.code}</td>
-                                    <td className="py-3 px-4 text-sm text-teal">{item.symbol}</td>
+                                    <td className="py-3 px-4 text-sm text-foreground">{item.code}</td>
+                                    <td className="py-3 px-4 text-sm text-foreground">{item.symbol}</td>
                                   </>
                                 )}
                                 {activeDomainTab === "languages" && (
-                                  <td className="py-3 px-4 text-sm text-teal">{item.code}</td>
+                                  <td className="py-3 px-4 text-sm text-foreground">{item.code}</td>
                                 )}
                                 {activeDomainTab === "timezones" && (
                                   <>
-                                    <td className="py-3 px-4 text-sm text-teal">{item.code}</td>
-                                    <td className="py-3 px-4 text-sm text-teal">{item.offset}</td>
+                                    <td className="py-3 px-4 text-sm text-foreground">{item.code}</td>
+                                    <td className="py-3 px-4 text-sm text-foreground">{item.offset}</td>
                                   </>
                                 )}
                                 {activeDomainTab === "countries" && (
-                                  <td className="py-3 px-4 text-sm text-teal">{item.code}</td>
+                                  <td className="py-3 px-4 text-sm text-foreground">{item.code}</td>
                                 )}
                                 {(activeDomainTab === "property-types" || activeDomainTab === "amenities") && (
-                                  <td className="py-3 px-4 text-sm text-teal/70">{item.description || item.icon}</td>
+                                  <td className="py-3 px-4 text-sm text-muted-foreground">
+                                    {item.description || item.icon}
+                                  </td>
                                 )}
                                 <td className="py-3 px-4">
                                   <Badge
                                     className={
-                                      item.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                      item.isActive ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"
                                     }
                                   >
                                     {item.isActive ? "Active" : "Inactive"}
@@ -1462,7 +1486,7 @@ export default function SuperAdminDashboard() {
                                       size="sm"
                                       variant="ghost"
                                       onClick={() => handleEditDomainItem(item)}
-                                      className="text-teal hover:text-teal hover:bg-teal/10"
+                                      className="text-foreground hover:text-foreground hover:bg-accent/10"
                                     >
                                       Edit
                                     </Button>
@@ -1470,7 +1494,7 @@ export default function SuperAdminDashboard() {
                                       size="sm"
                                       variant="ghost"
                                       onClick={() => handleDeleteDomainItem(item.id)}
-                                      className="text-coral hover:text-coral hover:bg-coral/10"
+                                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
                                     >
                                       Delete
                                     </Button>
@@ -1489,12 +1513,12 @@ export default function SuperAdminDashboard() {
         </Tabs>
       </div>
 
-      {/* Keep existing modals */}
+      {/* Modals for adding manager/property */}
       {showAddManagerModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-md bg-white">
+          <Card className="w-full max-w-md bg-card">
             <CardHeader>
-              <CardTitle className="text-teal font-serif">Add New Building Manager</CardTitle>
+              <CardTitle className="text-foreground font-serif">Add New Building Manager</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -1515,7 +1539,7 @@ export default function SuperAdminDashboard() {
                 </Button>
                 <Button
                   onClick={() => setShowAddManagerModal(false)}
-                  className="flex-1 bg-gradient-to-r from-coral to-coral-dark text-white"
+                  className="flex-1 bg-gradient-to-r from-primary to-primary-dark text-white"
                 >
                   Add Manager
                 </Button>
@@ -1527,9 +1551,9 @@ export default function SuperAdminDashboard() {
 
       {showAddPropertyModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-md bg-white">
+          <Card className="w-full max-w-md bg-card">
             <CardHeader>
-              <CardTitle className="text-teal font-serif">Add New Property</CardTitle>
+              <CardTitle className="text-foreground font-serif">Add New Property</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -1550,7 +1574,7 @@ export default function SuperAdminDashboard() {
                 </Button>
                 <Button
                   onClick={() => setShowAddPropertyModal(false)}
-                  className="flex-1 bg-gradient-to-r from-coral to-coral-dark text-white"
+                  className="flex-1 bg-gradient-to-r from-primary to-primary-dark text-white"
                 >
                   Add Property
                 </Button>
@@ -1560,11 +1584,12 @@ export default function SuperAdminDashboard() {
         </div>
       )}
 
+      {/* Modal for adding/editing domain items */}
       {(showAddDomainModal || showEditDomainModal) && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-md bg-white max-h-[90vh] overflow-y-auto">
+          <Card className="w-full max-w-md bg-card max-h-[90vh] overflow-y-auto">
             <CardHeader>
-              <CardTitle className="text-teal font-serif">
+              <CardTitle className="text-foreground font-serif">
                 {showEditDomainModal ? "Edit" : "Add"} {activeDomainTab.replace("-", " ").toUpperCase()}
               </CardTitle>
             </CardHeader>
@@ -1596,7 +1621,7 @@ export default function SuperAdminDashboard() {
                       placeholder={field.placeholder}
                       value={domainFormData[field.name] || ""}
                       onChange={(e) => setDomainFormData({ ...domainFormData, [field.name]: e.target.value })}
-                      className="w-full px-3 py-2 border border-stone/30 rounded-md text-teal placeholder:text-stone/50 focus:outline-none focus:ring-2 focus:ring-teal/20"
+                      className="w-full px-3 py-2 border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
                       rows={3}
                     />
                   ) : (
@@ -1606,7 +1631,7 @@ export default function SuperAdminDashboard() {
                       placeholder={field.placeholder}
                       value={domainFormData[field.name] || ""}
                       onChange={(e) => setDomainFormData({ ...domainFormData, [field.name]: e.target.value })}
-                      className="text-teal placeholder:text-stone/50"
+                      className="text-foreground placeholder:text-muted-foreground"
                     />
                   )}
                 </div>
@@ -1617,7 +1642,7 @@ export default function SuperAdminDashboard() {
                   id="isActive"
                   checked={domainFormData.isActive !== false}
                   onChange={(e) => setDomainFormData({ ...domainFormData, isActive: e.target.checked })}
-                  className="rounded border-stone/30"
+                  className="rounded border-border"
                 />
                 <Label htmlFor="isActive" className="cursor-pointer">
                   Active
@@ -1636,7 +1661,7 @@ export default function SuperAdminDashboard() {
                 </Button>
                 <Button
                   onClick={handleSaveDomainItem}
-                  className="flex-1 bg-gradient-to-r from-coral to-coral-dark text-white"
+                  className="flex-1 bg-gradient-to-r from-primary to-primary-dark text-white"
                 >
                   {showEditDomainModal ? "Update" : "Add"}
                 </Button>
