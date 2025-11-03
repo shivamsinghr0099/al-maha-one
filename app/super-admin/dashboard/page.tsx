@@ -52,8 +52,8 @@ const systemStats = [
     change: "+5 this month",
     trend: "up",
     icon: Building,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
+    color: "text-[#1C3F3A]", // Deep Teal
+    bgColor: "bg-[#F5F3E7]", // Soft Cream
   },
   {
     title: "Building Managers",
@@ -61,8 +61,8 @@ const systemStats = [
     change: "2 pending approval",
     trend: "neutral",
     icon: Settings,
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
+    color: "text-[#D4745E]", // Terracotta
+    bgColor: "bg-[#F5F3E7]", // Soft Cream
   },
   {
     title: "Total Users",
@@ -70,8 +70,8 @@ const systemStats = [
     change: "+89 this month",
     trend: "up",
     icon: Users,
-    color: "text-green-600",
-    bgColor: "bg-green-50",
+    color: "text-[#1C3F3A]", // Deep Teal
+    bgColor: "bg-[#F5F3E7]", // Soft Cream
   },
   {
     title: "System Health",
@@ -79,8 +79,8 @@ const systemStats = [
     change: "All systems operational",
     trend: "excellent",
     icon: Activity,
-    color: "text-emerald-600",
-    bgColor: "bg-emerald-50",
+    color: "text-[#D4745E]", // Terracotta
+    bgColor: "bg-[#F5F3E7]", // Soft Cream
   },
 ]
 
@@ -743,17 +743,17 @@ export default function SuperAdminDashboard() {
           {systemStats.map((stat, index) => (
             <Card
               key={index}
-              className="border border-border shadow-lg hover:shadow-xl transition-all duration-300 bg-card"
+              className="border-2 border-[#1C3F3A]/20 shadow-lg hover:shadow-xl transition-all duration-300 bg-white"
             >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
-                    <p className="text-2xl font-bold text-foreground mt-1">{stat.value}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{stat.change}</p>
+                    <p className="text-sm font-medium text-[#1C3F3A]/70">{stat.title}</p>
+                    <p className="text-2xl font-bold text-[#1C3F3A] mt-1">{stat.value}</p>
+                    <p className="text-xs text-[#1C3F3A]/60 mt-1">{stat.change}</p>
                   </div>
-                  <div className="p-3 rounded-xl bg-primary/10">
-                    <stat.icon className="h-6 w-6 text-primary" />
+                  <div className="p-3 rounded-xl bg-[#1C3F3A]/10">
+                    <stat.icon className="h-6 w-6 text-[#1C3F3A]" />
                   </div>
                 </div>
               </CardContent>
@@ -999,20 +999,20 @@ export default function SuperAdminDashboard() {
               {filteredServices.map((service) => (
                 <Card
                   key={service.id}
-                  className={`border border-border shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 ${service.bgColor} overflow-hidden relative group`}
+                  className="border-2 border-[#1C3F3A]/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 bg-white overflow-hidden relative group"
                   onClick={() => (window.location.href = service.route)}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 group-hover:from-primary/15 group-hover:to-primary/10 transition-all duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#1C3F3A]/5 to-[#C2C5AA]/5 group-hover:from-[#1C3F3A]/10 group-hover:to-[#C2C5AA]/10 transition-all duration-300"></div>
 
                   <CardContent className="relative p-6 text-center h-full flex flex-col justify-center">
-                    <div
-                      className={`w-16 h-16 bg-gradient-to-br ${service.color} rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}
-                    >
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#D4745E] to-[#D4745E]/80 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                       <service.icon className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="font-semibold text-foreground text-lg mb-2">{service.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
-                    <Badge className="mt-3 mx-auto bg-primary/10 text-primary">{service.category}</Badge>
+                    <h3 className="font-semibold text-[#1C3F3A] text-lg mb-2">{service.title}</h3>
+                    <p className="text-sm text-[#1C3F3A]/70 leading-relaxed">{service.description}</p>
+                    <Badge className="mt-3 mx-auto bg-[#1C3F3A]/10 text-[#1C3F3A] border-[#1C3F3A]/20">
+                      {service.category}
+                    </Badge>
                   </CardContent>
                 </Card>
               ))}
@@ -1081,7 +1081,7 @@ export default function SuperAdminDashboard() {
               <Badge className="bg-primary/10 text-primary">All Landlord Features</Badge>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-grid-cols-2 lg:grid-cols-4 gap-6">
               {landlordTools.map((tool) => (
                 <Card
                   key={tool.id}
