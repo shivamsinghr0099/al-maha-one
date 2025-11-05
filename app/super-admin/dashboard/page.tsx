@@ -45,7 +45,7 @@ import {
 import { MahaLogo } from "@/components/maha-logo"
 // The export exists in lib/api/super-admin.service.ts but isn't being recognized
 // import { superAdminService } from "@/lib/api/super-admin.service"
-import { domainHomeService, type DomainHomeStats, type Amenity, type FinanceStats } from "@/lib/api"
+import { domainHomeService, type DomainHomeStats, type Amenity, type FinanceStats } from "@/lib/api/domain-home.service"
 
 // All the data from previous implementation plus new comprehensive data
 const systemStats = [
