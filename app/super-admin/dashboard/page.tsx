@@ -1301,75 +1301,75 @@ export default function SuperAdminDashboard() {
           )}
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-10 bg-card border border-border text-xs">
+            <TabsList className="flex flex-wrap gap-2 bg-white border-2 border-[#1C3F3A]/20 p-2 rounded-lg h-auto">
               <TabsTrigger
                 value="overview"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Overview
               </TabsTrigger>
               <TabsTrigger
                 value="tenant-services"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Tenant Services
               </TabsTrigger>
               <TabsTrigger
                 value="building-ops"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Building Ops
               </TabsTrigger>
               <TabsTrigger
                 value="landlord-tools"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Landlord Tools
               </TabsTrigger>
               <TabsTrigger
                 value="financial"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Financial
               </TabsTrigger>
               <TabsTrigger
                 value="approvals"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Approvals
               </TabsTrigger>
               <TabsTrigger
                 value="analytics"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Analytics
               </TabsTrigger>
               <TabsTrigger
                 value="emergency"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Emergency
               </TabsTrigger>
               <TabsTrigger
                 value="domains"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Domains
               </TabsTrigger>
               <TabsTrigger
                 value="reports"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground"
+                className="data-[state=active]:bg-[#1C3F3A] data-[state=active]:text-white text-[#1C3F3A] font-medium px-4 py-2 rounded-md transition-all"
               >
                 Reports
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-8">
-              <div className="grid lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* System Health */}
                 <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow">
                   <CardHeader className="pb-4">
-                    <CardTitle className="flex items-center space-x-3 text-[#1C3F3A] font-serif text-xl">
+                    <CardTitle className="flex items-center gap-3 text-[#1C3F3A] font-serif text-xl">
                       <div className="p-2 bg-[#1C3F3A]/10 rounded-lg">
                         <Activity className="h-6 w-6 text-[#1C3F3A]" />
                       </div>
