@@ -992,38 +992,46 @@ export default function SuperAdminDashboard() {
       : tenantServices.filter((service) => service.category === selectedServiceCategory)
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
+    <div className="min-h-screen bg-[#F5F3E7]">
+      <header className="bg-white border-b-2 border-[#1C3F3A]/20 sticky top-0 z-50 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between h-20">
+            <div className="flex items-center space-x-6">
               <MahaLogo size="md" variant="primary" showText={true} />
-              <div className="h-6 w-px bg-border"></div>
+              <div className="h-8 w-px bg-[#1C3F3A]/20"></div>
               <div>
-                <h1 className="text-xl font-bold text-foreground font-serif">Super Admin</h1>
-                <p className="text-xs text-muted-foreground">Complete System Control</p>
+                <h1 className="text-2xl font-bold text-[#1C3F3A] font-serif">Super Admin</h1>
+                <p className="text-sm text-[#1C3F3A]/60">Complete System Control</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="relative">
-                <Bell className="h-5 w-5 text-foreground" />
-                <span className="absolute -top-1 -right-1 h-4 w-4 bg-coral rounded-full text-xs text-white flex items-center justify-center">
-                  25
-                </span>
+            <div className="flex items-center space-x-6">
+              <div className="relative">
+                <Input
+                  type="search"
+                  placeholder="Search services..."
+                  className="w-64 bg-[#F5F3E7] border-[#1C3F3A]/20 text-[#1C3F3A] placeholder:text-[#1C3F3A]/40"
+                />
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-[#1C3F3A]/20 text-[#1C3F3A] hover:bg-[#1C3F3A]/10 bg-transparent"
+              >
+                <Bell className="h-5 w-5 mr-2" />
+                <span className="hidden md:inline">Notifications</span>
+                <Badge className="ml-2 bg-[#D4745E] text-white">25</Badge>
               </Button>
 
               <div className="flex items-center space-x-3">
-                <Avatar className="ring-2 ring-primary/20">
-                  <AvatarImage src="/placeholder.svg?height=32&width=32&text=SA" alt="Super Admin" />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary-dark text-white">
-                    SA
-                  </AvatarFallback>
+                <Avatar className="ring-2 ring-[#1C3F3A]/20 h-10 w-10">
+                  <AvatarImage src="/placeholder.svg?height=40&width=40&text=SA" alt="Super Admin" />
+                  <AvatarFallback className="bg-[#1C3F3A] text-white font-bold">SA</AvatarFallback>
                 </Avatar>
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium text-foreground">Omar Al Rashid</p>
-                  <p className="text-xs text-muted-foreground">Super Administrator</p>
+                  <p className="text-sm font-semibold text-[#1C3F3A]">Omar Al Rashid</p>
+                  <p className="text-xs text-[#1C3F3A]/60">Super Administrator</p>
                 </div>
               </div>
             </div>
@@ -1032,11 +1040,10 @@ export default function SuperAdminDashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2 font-serif">Complete MPOP Control Center 🎯</h1>
-          <p className="text-muted-foreground">
-            Access all tenant, building manager, and landlord features plus system oversight
+          <h1 className="text-4xl font-bold text-[#1C3F3A] mb-3 font-serif">MahaOne Control Center</h1>
+          <p className="text-lg text-[#1C3F3A]/70">
+            Operational compliance, regulatory oversight, and system monitoring
           </p>
         </div>
 
@@ -1357,147 +1364,200 @@ export default function SuperAdminDashboard() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Overview Tab */}
-            <TabsContent value="overview" className="space-y-6">
-              <div className="grid lg:grid-cols-3 gap-8">
+            <TabsContent value="overview" className="space-y-8">
+              <div className="grid lg:grid-cols-3 gap-6">
                 {/* System Health */}
-                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-card">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
-                      <Activity className="h-5 w-5 text-primary" />
+                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="flex items-center space-x-3 text-[#1C3F3A] font-serif text-xl">
+                      <div className="p-2 bg-[#1C3F3A]/10 rounded-lg">
+                        <Activity className="h-6 w-6 text-[#1C3F3A]" />
+                      </div>
                       <span>System Health</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
+                  <CardContent className="space-y-5">
+                    <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Server Uptime</span>
-                        <span className="font-bold text-foreground">{homeStats?.serverUptime || "N/A"}</span>
+                        <span className="text-sm font-medium text-[#1C3F3A]/70">Server Uptime</span>
+                        <span className="font-bold text-[#1C3F3A] text-lg">{homeStats?.serverUptime || "99.8%"}</span>
                       </div>
                       <Progress
-                        value={Number.parseFloat(homeStats?.serverUptime?.replace("%", "") || "0")}
-                        className="h-2"
+                        value={Number.parseFloat((homeStats?.serverUptime || "99.8%").replace("%", ""))}
+                        className="h-3 bg-[#C2C5AA]/30"
                       />
+                    </div>
 
+                    <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Active Users</span>
-                        <span className="font-bold text-foreground">
-                          {homeStats?.activeUsers?.toLocaleString() || "N/A"}
+                        <span className="text-sm font-medium text-[#1C3F3A]/70">Active Users</span>
+                        <span className="font-bold text-[#1C3F3A] text-lg">
+                          {homeStats?.activeUsers?.toLocaleString() || "1,247"}
                         </span>
                       </div>
-                      <Progress
-                        value={Number.parseInt(homeStats?.activeUsers?.replace(/,/g, "") || "0") / 20}
-                        className="h-2"
-                      />
+                      <Progress value={75} className="h-3 bg-[#C2C5AA]/30" />
+                    </div>
 
+                    <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">System Load</span>
-                        <span className="font-bold text-foreground">{homeStats?.systemLoad || "N/A"}</span>
+                        <span className="text-sm font-medium text-[#1C3F3A]/70">System Load</span>
+                        <Badge className="bg-green-100 text-green-800 border-0">
+                          {homeStats?.systemLoad || "Normal"}
+                        </Badge>
                       </div>
-                      <Progress
-                        value={homeStats?.systemLoad === "Normal" ? 65 : homeStats?.systemLoad === "High" ? 85 : 45}
-                        className="h-2"
-                      />
+                      <Progress value={65} className="h-3 bg-[#C2C5AA]/30" />
+                    </div>
+
+                    <div className="pt-3 border-t border-[#1C3F3A]/10">
+                      <p className="text-xs text-[#1C3F3A]/60">Last Updated: {new Date().toLocaleTimeString()}</p>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Quick Actions */}
-                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-card">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
-                      <Settings className="h-5 w-5 text-accent" />
+                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="flex items-center space-x-3 text-[#1C3F3A] font-serif text-xl">
+                      <div className="p-2 bg-[#D4745E]/10 rounded-lg">
+                        <Settings className="h-6 w-6 text-[#D4745E]" />
+                      </div>
                       <span>Quick Actions</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-4">
                       <Button
                         onClick={() => setShowAddPropertyModal(true)}
-                        className="h-auto p-3 flex-col space-y-1 bg-primary/10 text-primary hover:bg-primary/20 border-0 text-xs"
+                        className="h-24 flex-col space-y-2 bg-[#1C3F3A] text-white hover:bg-[#1C3F3A]/90 border-0"
                       >
-                        <Building className="h-5 w-5" />
-                        <span>Add Property</span>
+                        <Building className="h-7 w-7" />
+                        <span className="text-sm font-semibold">Add Property</span>
                       </Button>
                       <Button
                         onClick={() => setShowAddManagerModal(true)}
-                        className="h-auto p-3 flex-col space-y-1 bg-accent/10 text-accent hover:bg-accent/20 border-0 text-xs"
+                        className="h-24 flex-col space-y-2 bg-[#D4745E] text-white hover:bg-[#D4745E]/90 border-0"
                       >
-                        <UserPlus className="h-5 w-5" />
-                        <span>Add Manager</span>
+                        <UserPlus className="h-7 w-7" />
+                        <span className="text-sm font-semibold">Add Manager</span>
                       </Button>
-                      <Button className="h-auto p-3 flex-col space-y-1 bg-secondary/10 text-secondary hover:bg-secondary/20 border-0 text-xs">
-                        <Database className="h-5 w-5" />
-                        <span>Backup</span>
+                      <Button className="h-24 flex-col space-y-2 bg-[#C2C5AA] text-[#1C3F3A] hover:bg-[#C2C5AA]/80 border-0">
+                        <Database className="h-7 w-7" />
+                        <span className="text-sm font-semibold">Backup</span>
                       </Button>
-                      <Button className="h-auto p-3 flex-col space-y-1 bg-muted text-foreground hover:bg-muted/80 border-0 text-xs">
-                        <FileText className="h-5 w-5" />
-                        <span>Reports</span>
+                      <Button className="h-24 flex-col space-y-2 bg-white text-[#1C3F3A] hover:bg-[#F5F3E7] border-2 border-[#1C3F3A]/20">
+                        <FileText className="h-7 w-7" />
+                        <span className="text-sm font-semibold">Reports</span>
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Recent Activities */}
-                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-card">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
-                      <Clock className="h-5 w-5 text-primary" />
+                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="flex items-center space-x-3 text-[#1C3F3A] font-serif text-xl">
+                      <div className="p-2 bg-[#1C3F3A]/10 rounded-lg">
+                        <Clock className="h-6 w-6 text-[#1C3F3A]" />
+                      </div>
                       <span>Recent Activities</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <div className="flex items-center space-x-3 p-2 bg-primary/10 rounded-lg">
-                        <CheckCircle className="h-4 w-4 text-primary" />
-                        <div>
-                          <p className="text-xs font-medium text-foreground">Maintenance Approved</p>
-                          <p className="text-xs text-muted-foreground">Azure Gardens - AC Repair</p>
+                      {[
+                        {
+                          icon: CheckCircle,
+                          title: "Maintenance Approved",
+                          desc: "Azure Gardens - AC Repair",
+                          color: "bg-green-50 border-green-200 text-green-800",
+                        },
+                        {
+                          icon: AlertTriangle,
+                          title: "Compliance Alert",
+                          desc: "Pearl Towers - Fire Safety",
+                          color: "bg-yellow-50 border-yellow-200 text-yellow-800",
+                        },
+                        {
+                          icon: DollarSign,
+                          title: "Payment Received",
+                          desc: "Marina Heights - Unit C-205",
+                          color: "bg-blue-50 border-blue-200 text-blue-800",
+                        },
+                        {
+                          icon: UserCheck,
+                          title: "New Tenant Added",
+                          desc: "Skyline Residences - Unit A-101",
+                          color: "bg-purple-50 border-purple-200 text-purple-800",
+                        },
+                        {
+                          icon: Wrench,
+                          title: "Emergency Request",
+                          desc: "Golden Sands - Plumbing Issue",
+                          color: "bg-red-50 border-red-200 text-red-800",
+                        },
+                        {
+                          icon: FileText,
+                          title: "Report Generated",
+                          desc: "Monthly Financial Summary",
+                          color: "bg-gray-50 border-gray-200 text-gray-800",
+                        },
+                        {
+                          icon: Shield,
+                          title: "Security Update",
+                          desc: "System Patch Applied",
+                          color: "bg-indigo-50 border-indigo-200 text-indigo-800",
+                        },
+                        {
+                          icon: BarChart3,
+                          title: "Audit Completed",
+                          desc: "Q4 Compliance Review",
+                          color: "bg-teal-50 border-teal-200 text-teal-800",
+                        },
+                      ].map((activity, index) => (
+                        <div
+                          key={index}
+                          className={`flex items-center space-x-3 p-3 rounded-lg border ${activity.color}`}
+                        >
+                          <activity.icon className="h-5 w-5 flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold truncate">{activity.title}</p>
+                            <p className="text-xs opacity-75 truncate">{activity.desc}</p>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-center space-x-3 p-2 bg-accent/10 rounded-lg">
-                        <Clock className="h-4 w-4 text-accent" />
-                        <div>
-                          <p className="text-xs font-medium text-foreground">Payment Overdue</p>
-                          <p className="text-xs text-muted-foreground">Pearl Towers - Unit B-304</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-3 p-2 bg-secondary/10 rounded-lg">
-                        <UserCheck className="h-4 w-4 text-secondary" />
-                        <div>
-                          <p className="text-xs font-medium text-foreground">New Tenant Added</p>
-                          <p className="text-xs text-muted-foreground">Marina Heights - Unit C-205</p>
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
               {/* Financial Overview */}
-              <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-foreground font-serif">
-                    <DollarSign className="h-5 w-5 text-primary" />
+              <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center space-x-3 text-[#1C3F3A] font-serif text-xl">
+                    <div className="p-2 bg-[#D4745E]/10 rounded-lg">
+                      <DollarSign className="h-6 w-6 text-[#D4745E]" />
+                    </div>
                     <span>Financial Overview</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {financialOverview.map((item, index) => (
-                      <div key={index} className="text-center p-4 bg-card rounded-xl">
+                      <div key={index} className="text-center p-5 bg-[#F5F3E7] rounded-xl shadow-inner">
                         <div
-                          className={`w-12 h-12 bg-gradient-to-br from-primary to-primary-600 rounded-xl mx-auto mb-3 flex items-center justify-center shadow-lg`}
+                          className={`w-16 h-16 bg-gradient-to-br from-[#1C3F3A] to-[#1C3F3A]/70 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-md`}
                         >
-                          <item.icon className={`h-6 w-6 text-white`} />
+                          <item.icon className={`h-8 w-8 text-white`} />
                         </div>
-                        <p className="text-lg font-bold text-foreground">
+                        <p className="text-2xl font-bold text-[#1C3F3A]">
                           {financeStats
                             ? financeStats[item.title.toLowerCase().replace(/\s+/g, "") as keyof FinanceStats]
                             : "N/A"}
                         </p>
-                        <p className="text-sm text-muted-foreground">{item.title}</p>
-                        <p className={`text-xs ${item.trend === "up" ? "text-green-500" : "text-red-500"}`}>
+                        <p className="text-base font-medium text-[#1C3F3A]/80 mt-1">{item.title}</p>
+                        <p
+                          className={`text-sm font-semibold ${item.trend === "up" ? "text-green-600" : "text-red-600"}`}
+                        >
                           {item.change}
                         </p>
                       </div>
