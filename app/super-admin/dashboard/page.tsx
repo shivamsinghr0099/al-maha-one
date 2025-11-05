@@ -1365,9 +1365,9 @@ export default function SuperAdminDashboard() {
             </TabsList>
 
             <TabsContent value="overview" className="space-y-8">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                 {/* System Health */}
-                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow">
+                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow w-full">
                   <CardHeader className="pb-4">
                     <CardTitle className="flex items-center gap-3 text-[#1C3F3A] font-serif text-xl">
                       <div className="p-2 bg-[#1C3F3A]/10 rounded-lg">
@@ -1380,22 +1380,21 @@ export default function SuperAdminDashboard() {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium text-[#1C3F3A]/70">Server Uptime</span>
-                        <span className="font-bold text-[#1C3F3A] text-lg">{homeStats?.serverUptime || "99.8%"}</span>
+                        <Badge className="bg-green-100 text-green-800 border-0">
+                          {homeStats?.serverUptime || "99.8%"}
+                        </Badge>
                       </div>
-                      <Progress
-                        value={Number.parseFloat((homeStats?.serverUptime || "99.8%").replace("%", ""))}
-                        className="h-3 bg-[#C2C5AA]/30"
-                      />
+                      <p className="text-3xl font-bold text-[#1C3F3A]">{homeStats?.serverUptime || "99.8%"}</p>
                     </div>
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium text-[#1C3F3A]/70">Active Users</span>
-                        <span className="font-bold text-[#1C3F3A] text-lg">
-                          {homeStats?.activeUsers?.toLocaleString() || "1,247"}
-                        </span>
+                        <Badge className="bg-[#D4745E]/10 text-[#D4745E] border-0">
+                          {homeStats?.activeUsers || "1,245"}
+                        </Badge>
                       </div>
-                      <Progress value={75} className="h-3 bg-[#C2C5AA]/30" />
+                      <p className="text-3xl font-bold text-[#1C3F3A]">{homeStats?.activeUsers || "1,245"}</p>
                     </div>
 
                     <div className="space-y-2">
@@ -1415,7 +1414,7 @@ export default function SuperAdminDashboard() {
                 </Card>
 
                 {/* Quick Actions */}
-                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow">
+                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow w-full">
                   <CardHeader className="pb-4">
                     <CardTitle className="flex items-center space-x-3 text-[#1C3F3A] font-serif text-xl">
                       <div className="p-2 bg-[#D4745E]/10 rounded-lg">
@@ -1453,7 +1452,7 @@ export default function SuperAdminDashboard() {
                 </Card>
 
                 {/* Recent Activities */}
-                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow">
+                <Card className="border-2 border-[#1C3F3A]/20 shadow-lg bg-white hover:shadow-xl transition-shadow w-full">
                   <CardHeader className="pb-4">
                     <CardTitle className="flex items-center space-x-3 text-[#1C3F3A] font-serif text-xl">
                       <div className="p-2 bg-[#1C3F3A]/10 rounded-lg">
@@ -1463,7 +1462,7 @@ export default function SuperAdminDashboard() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
+                    <div className="space-y-3 max-h-[400px] overflow-y-auto">
                       {[
                         {
                           icon: CheckCircle,
@@ -1500,18 +1499,6 @@ export default function SuperAdminDashboard() {
                           title: "Report Generated",
                           desc: "Monthly Financial Summary",
                           color: "bg-gray-50 border-gray-200 text-gray-800",
-                        },
-                        {
-                          icon: Shield,
-                          title: "Security Update",
-                          desc: "System Patch Applied",
-                          color: "bg-indigo-50 border-indigo-200 text-indigo-800",
-                        },
-                        {
-                          icon: BarChart3,
-                          title: "Audit Completed",
-                          desc: "Q4 Compliance Review",
-                          color: "bg-teal-50 border-teal-200 text-teal-800",
                         },
                       ].map((activity, index) => (
                         <div
