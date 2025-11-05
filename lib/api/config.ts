@@ -4,6 +4,8 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api
 export const USE_DEMO_MODE = process.env.NEXT_PUBLIC_USE_DEMO_MODE === "true" || !process.env.NEXT_PUBLIC_API_BASE_URL
 
 export const API_ENDPOINTS = {
+  DOMAIN: "/domain",
+
   // Super Admin Endpoints
   SUPER_ADMIN: {
     LOGIN: "/superAdmin/login",
