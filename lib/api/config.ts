@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
     },
     CURRENCY: {
       LIST: "/superAdmin/currency/list",
-      ADD: "/superAdmin/crrency/add",
+      ADD: "/superAdmin/currency/add",
       EDIT: "/superAdmin/currency/edit",
       REMOVE: "/superAdmin/currency/remove",
     },
